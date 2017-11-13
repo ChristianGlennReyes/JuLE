@@ -1,0 +1,9 @@
+a {
+	color: inherit;
+}
+
+.panel-success > .panel-heading {
+	color: #ffffff !important;
+	background-color: #33b73d !important;
+	border-color: #33b73d !important;
+}

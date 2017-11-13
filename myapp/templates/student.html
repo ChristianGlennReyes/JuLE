@@ -1,0 +1,209 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!--[if IE]>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <![endif]-->
+    <title>JuLE</title>
+    <!-- BOOTSTRAP CORE STYLE  -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+    <!-- FONT AWESOME ICONS  -->
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet" />
+    <!-- CUSTOM STYLE  -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/mystyle.css' %}" rel="stylesheet" />
+     <!-- HTML5 Shiv and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
+    
+    <!-- Optional SmartWizard theme -->
+    <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/smart_wizard_theme_arrows.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/smart_wizard_theme_dots.css' %}" rel="stylesheet" type="text/css" />
+</head>
+<body>
+    <div class="navbar navbar-inverse set-radius-zero">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://127.0.0.1:8000/student/">
+
+                    <img src="{% static 'img/logo1.png' %}" />
+                </a>
+
+            </div>
+
+            <div class="left-div">
+                <div class="user-settings-wrapper">
+                    <ul class="nav">
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                                <span class="glyphicon glyphicon-user" style="font-size: 25px;"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-settings">
+                                <div class="media">
+                                    <a class="media-left" href="#">
+                                        <img src="{% static 'img/64-64.jpg' %}" alt="" class="img-rounded" />
+                                    </a>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">Group Name</h4>
+                                        <!-- <h5>Developer & Designer</h5> -->
+                                    </div>
+                                </div>
+                                <!-- <hr />
+                                <h5><strong>Personal Bio : </strong></h5>
+                                Anim pariatur cliche reprehen derit. -->
+                                <hr />
+                                <a href="http://127.0.0.1:8000/student/members" class="btn btn-info btn-sm">Members</a>&nbsp; <a href="http://127.0.0.1:8000/" class="btn btn-danger btn-sm">Logout</a>
+
+                            </div>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- LOGO HEADER END-->
+    <!-- <section class="menu-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="navbar-collapse collapse ">
+                        <ul id="menu-top" class="nav navbar-nav navbar-right">
+                            <li><a class="menu-top-active" href="index.html">Lab Activity</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section> -->
+    <!-- MENU SECTION END-->
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="page-head-line">Lab Activities</h4>
+                </div>
+            </div>
+
+            <!-- <form class="form-inline">
+             <div class="form-group">
+              <label >Choose Theme:</label>
+              <select id="theme_selector" class="form-control">
+                    <option value="default">default</option>
+                    <option value="arrows">arrows</option>
+                    <option value="circles">circles</option>
+                    <option value="dots"><data></data>ots</option>
+              </select>
+            </div>           
+            
+            <label>External Buttons:</label>
+            <div class="btn-group navbar-btn" role="group">
+                <button class="btn btn-default" id="prev-btn" type="button">Go Previous</button>
+                <button class="btn btn-default" id="next-btn" type="button">Go Next</button>
+                <button class="btn btn-danger" id="reset-btn" type="button">Reset Wizard</button>
+            </div>
+        </form> -->
+
+            <div class="row">
+                <div class="col-md-4 col-sm-4">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            Lab Activity 1
+                        </div>
+                        <div class="panel-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                        </div>
+                        <div class="panel-footer" align="right">
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="http://127.0.0.1:8000/student/labactivity/start">Start</a></li>
+                                    <li><a href="http://127.0.0.1:8000/student/labactivity/">View</a></li>
+                              </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Lab Activity 2
+                        </div>
+                        <div class="panel-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                        </div>
+                        <div class="panel-footer" align="right">
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="http://127.0.0.1:8000/student/labactivity/start">Start</a></li>
+                                    <li><a href="http://127.0.0.1:8000/student/labactivity/">View</a></li>
+                              </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-4">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Lab Activity 3
+                        </div>
+                        <div class="panel-body">
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                        </div>
+                        <div class="panel-footer" align="right">
+                            <div class="btn-group">
+                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="http://127.0.0.1:8000/student/labactivity/start">Start</a></li>
+                                    <li><a href="http://127.0.0.1:8000/student/labactivity/">View</a></li>
+                              </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    <!-- CONTENT-WRAPPER SECTION END-->
+    <!-- <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    &copy; 2015 YourCompany | By : <a href="http://www.designbootstrap.com/" target="_blank">DesignBootstrap</a>
+                </div>
+
+            </div>
+        </div>
+    </footer> -->
+    <!-- FOOTER SECTION END-->
+    <!-- JAVASCRIPT AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
+    <!-- CORE JQUERY SCRIPTS -->
+    <script src="{% static 'js/jquery-1.11.1.js' %}"></script>
+    <!-- BOOTSTRAP SCRIPTS  -->
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+</body>
+</html>
