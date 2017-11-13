@@ -36,13 +36,16 @@ class Group(models.Model):
 	groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING)
 	studentid = models.ForeignKey(Student, models.DO_NOTHING)
 
+	def __str__(self):
+		return str(self.groupid) + " - " + str(self.studentid)
+
 class Grade(models.Model):
 	gradeid = models.FloatField(primary_key=True)
 	grademin = models.IntegerField(blank=True, null=True)
 	grademax = models.IntegerField(blank=True, null=True)
 
-	def __float__(self):
-		return self.gradeid
+	def __str__(self):
+		return str(self.gradeid)
 
 class Sensors(models.Model):
 	sensorid = models.IntegerField(primary_key=True)
@@ -64,20 +67,29 @@ class LabActivity(models.Model):
 class LabProcedure(models.Model):
 	procedureid = models.IntegerField(primary_key=True)
 	labid = models.ForeignKey(LabActivity, models.DO_NOTHING)
-	sensorid = models.ForeignKey(Sensors, models.DO_NOTHING)
+	sensorid = models.ForeignKey(Sensors, models.DO_NOTHING, blank=True, null=True)
 	stepnum = models.IntegerField()
+	procedurename = models.CharField(max_length=100, null=False)
 	proceduredesc = models.TextField()
 	procedurestatus = models.IntegerField()
 	minvalue = models.IntegerField(blank=True, null=True)
 	maxvalue = models.IntegerField(blank=True, null=True)
 
-	def __int__(self):
-		return self.procedureid 
+	def __str__(self):
+		return self.procedurename 
 
 class GroupGrade(models.Model):
 	groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING)
 	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
 	gradeid = models.ForeignKey(Grade, models.DO_NOTHING)
 
-	def __int__(self):
-		return self.groupid 
+	def __str__(self):
+		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.gradeid)
+
+class DataValue(models.Model):
+	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
+	groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING)
+	value = models.CharField(max_length=1000)
+
+	def __str__(self):
+		return str(self.procedureid) + " - " + str(self.groupid) + " - " + str(self.value)
