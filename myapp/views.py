@@ -2,9 +2,7 @@ from django.shortcuts import render
 from myapp.forms import LoginForm
 from . import models
 from django.template import loader
-from myapp.models import Student
-from myapp.models import Group
-from myapp.models import LabActivity
+from myapp.models import Student, Group, LabActivity, LabProcedure
 from django.http import HttpResponse
 
 # Create your views here.
@@ -17,12 +15,11 @@ def home(request):
 		if(uType == False):
 			# return render(request, "student.html", {})
 			template = loader.get_template('student.html')
-			return HttpResponse(template.render(context, request))
 		else:
 			# print(request.user.profile.facultyid.facultyname)
 			# return render(request, "teacher.html", {})
 			template = loader.get_template('teacher.html')
-			return HttpResponse(template.render(context, request))
+		return HttpResponse(template.render(context, request))
 
 # def student(request):
 # 	return render(request, "student.html", {})
@@ -36,10 +33,25 @@ def student_members(request):
 	return HttpResponse(template.render(context, request))
 
 def lab_activity(request):
-	return render(request, "student_labactivity.html", {})
+	if request.method=='GET':
+		id = request.GET.get('id')
+	template = loader.get_template('student_labactivity.html')
+	context = {
+		'labprocedures': LabProcedure.objects.filter(labid=id),
+		'labactivities': LabActivity.objects.filter(pk=id)
+	}
+	# return render(request, "student_labactivity.html", {})
+	return HttpResponse(template.render(context, request))
 
 def start(request):
-	return render(request, "student_labactivity_start.html", {})
+	if request.method=='GET':
+		id = request.GET.get('id')
+	template = loader.get_template('student_labactivity_start.html')
+	context = {
+		'labprocedures': LabProcedure.objects.filter(labid=id),
+		'labactivities': LabActivity.objects.filter(pk=id)
+	}
+	return HttpResponse(template.render(context, request))
 
 # def teacher(request):
 # 	return render(request, "teacher.html", {})

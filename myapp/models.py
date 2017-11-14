@@ -28,6 +28,7 @@ class Profile(models.Model):
     userType = models.BooleanField()
     facultyid = models.ForeignKey(Faculty, models.DO_NOTHING, blank=True, null=True)
     groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING, blank=True, null=True)
+    loggedin = models.BooleanField()
 
     def __str__(self):
     	return self.user.username
