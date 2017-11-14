@@ -121,3 +121,5 @@ USE_TZ = True
 STATIC_URL = '/myapp/static/'
 
 LOGIN_REDIRECT_URL = '/home/'
+
+LOGOUT_REDIRECT_URL = '/'

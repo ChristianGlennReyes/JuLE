@@ -58,8 +58,9 @@ class LabActivity(models.Model):
 	labid = models.IntegerField(primary_key=True)
 	labname = models.CharField(unique=True, max_length=100)
 	labsummary = models.TextField(blank=True, null=True)
-	hidden = models.IntegerField()
-	selected = models.IntegerField()
+	numprocedures = models.IntegerField()
+	hidden = models.BooleanField()
+	selected = models.BooleanField()
 
 	def __str__(self):
 		return self.labname
@@ -71,7 +72,6 @@ class LabProcedure(models.Model):
 	stepnum = models.IntegerField()
 	procedurename = models.CharField(max_length=100, null=False)
 	proceduredesc = models.TextField()
-	procedurestatus = models.IntegerField()
 	minvalue = models.IntegerField(blank=True, null=True)
 	maxvalue = models.IntegerField(blank=True, null=True)
 
@@ -93,3 +93,11 @@ class DataValue(models.Model):
 
 	def __str__(self):
 		return str(self.procedureid) + " - " + str(self.groupid) + " - " + str(self.value)
+
+class LabProcedureStatus(models.Model):
+	groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING)
+	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
+	status = models.BooleanField()
+
+	def __str__(self):
+		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.status)
