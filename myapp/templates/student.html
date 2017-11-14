@@ -126,8 +126,14 @@
 
             <div class="row">
                 {% for labactivity in labactivities %}
+                {% if labactivity.hidden %}
+                {% else %}
                 <div class="col-md-4 col-sm-4">
+                    {% if labactivity.selected %}
                     <div class="panel panel-success">
+                    {% else %}
+                    <div class="panel panel-primary">
+                    {% endif %}
                         <div class="panel-heading">
                             {{ labactivity.labname }}
                         </div>
@@ -138,13 +144,16 @@
                             <div class="btn-group">
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
+                                    {% if labactivity.selected %}
                                     <li><a href="http://127.0.0.1:8000/student/labactivity/start">Start</a></li>
+                                    {% endif %}
                                     <li><a href="http://127.0.0.1:8000/student/labactivity/">View</a></li>
                               </ul>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endif %}
                 {% endfor %}
             </div>
             

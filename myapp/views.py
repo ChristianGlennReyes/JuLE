@@ -11,16 +11,18 @@ from django.http import HttpResponse
 def home(request):
 	if(request.user.is_authenticated):
 		uType = request.user.profile.userType
+		context = {
+			'labactivities': LabActivity.objects.all()
+		}
 		if(uType == False):
 			# return render(request, "student.html", {})
 			template = loader.get_template('student.html')
-			context = {
-				'labactivities': LabActivity.objects.all()
-			}
 			return HttpResponse(template.render(context, request))
 		else:
 			# print(request.user.profile.facultyid.facultyname)
-			return render(request, "teacher.html", {})
+			# return render(request, "teacher.html", {})
+			template = loader.get_template('teacher.html')
+			return HttpResponse(template.render(context, request))
 
 # def student(request):
 # 	return render(request, "student.html", {})

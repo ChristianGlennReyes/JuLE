@@ -76,7 +76,7 @@ class LabProcedure(models.Model):
 	maxvalue = models.IntegerField(blank=True, null=True)
 
 	def __str__(self):
-		return self.procedurename 
+		return str(self.labid) + " - " + str(self.procedurename)
 
 class GroupGrade(models.Model):
 	groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING)
