@@ -84,8 +84,8 @@
                 <div class="col-md-12">
                     <div class="navbar-collapse collapse ">
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
-                            <li><a class="menu-top-active" href="{% url 'home' %}">Lab Activities</a></li>
-                            <li><a href="{% url 'progresstracker' %}">Progress Tracker</a></li>
+                            <li><a href="{% url 'home' %}">Lab Activities</a></li>
+                            <li><a class="menu-top-active" href="{% url 'progresstracker' %}">Progress Tracker</a></li>
 
                         </ul>
                     </div>
@@ -103,52 +103,44 @@
                 </div>
             </div>
 
-            <div class="panel panel-success">
+            {% for studentgroup in studentgroups %}
+
+            {% for profile in profiles %}
+                {% if studentgroup == profile.groupid %}
+                    {% if profile.loggedin %}
+                        <div class="panel panel-success">
+                    {% else %}
+                        <div class="panel panel-default">
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed">Group Name</a>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#{{ studentgroup.groupid }}" class="collapsed">{{ studentgroup.groupname }}</a>
                     </h4>
                 </div>
-                <div id="collapseOne" class="panel-collapse collapse" style="height: 0px;">
+                <div id="{{ studentgroup.groupid }}" class="panel-collapse collapse" style="height: 0px;">
                     <div class="panel-body">
                         <div class="col-md-12">
-                            <div class="col-md-3">
-                                Laurence Barin
-                            </div>
-                            <div class="col-md-3">
-                                Francis Fernandez
-                            </div>
-                            <div class="col-md-3">
-                                Karmela Libed
-                            </div>
-                            <div class="col-md-3">
-                                Glenn Reyes
-                            </div>
+                        {% for group in groups %}
+                            {% for student in students %}
+                                {% if studentgroup == group.groupid and student == group.studentid%}
+                                <div class="col-md-3">
+                                    {{ student.studentname }}
+                                </div>
+                                {% endif %}    
+                            {% endfor %}
+                        {% endfor %}
                         </div>
-                        <br><br>
-                        <div class="col-md-12">
-                            <div class="col-md-3">
-                                Ava Alimurong
-                            </div>
-                            <div class="col-md-3">
-                                Paula Casas
-                            </div>
-                            <div class="col-md-3">
-                                Carl Tan
-                            </div>
-                            <div class="col-md-3">
-                                Robin Young
-                            </div>
-                        </div>
-                        
-                        <br><br>
+                        <br><br><br>
 
-                        <a href="http://127.0.0.1:8000/teacher/progresstracker/student/">
+                        {% for labactivity in labactivities %}
+                        {% if labactivity.hidden == False %}
+                        <a href="{% url 'progresstracker_student' %}">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    Lab Activtiy 1
+                                    {{ labactivity.labname }}
                                 </div>
-                            
                                 <div class="panel-body">
                                     <div class="progress progress-striped active">
                                         <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
@@ -158,134 +150,12 @@
                                 </div>
                             </div>
                         </a>
-
-                        <a href="http://127.0.0.1:8000/teacher/progresstracker/student/">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    Lab Activtiy 2
-                                </div>
-                           
-                                <div class="panel-body">
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
-                                            <span class="sr-only">70% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-
-                        <a href="http://127.0.0.1:8000/teacher/progresstracker/student/">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    Lab Activtiy 3
-                                </div>
-                           
-                                <div class="panel-body">
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                            <span class="sr-only">0% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" class="collapsed">Group Name</a>
-                    </h4>
-                </div>
-                <div id="collapseTwo" class="panel-collapse collapse" style="height: 0px;">
-                    <div class="panel-body">
-                        <div class="col-md-12">
-                            <div class="col-md-3">
-                                Laurence Barin
-                            </div>
-                            <div class="col-md-3">
-                                Francis Fernandez
-                            </div>
-                            <div class="col-md-3">
-                                Karmela Libed
-                            </div>
-                            <div class="col-md-3">
-                                Glenn Reyes
-                            </div>
-                        </div>
-                        <br><br>
-                        <div class="col-md-12">
-                            <div class="col-md-3">
-                                Ava Alimurong
-                            </div>
-                            <div class="col-md-3">
-                                Paula Casas
-                            </div>
-                            <div class="col-md-3">
-                                Carl Tan
-                            </div>
-                            <div class="col-md-3">
-                                Robin Young
-                            </div>
-                        </div>
-                        
-                        <br><br>
-
-                        <a href="http://127.0.0.1:8000/teacher/progresstracker/student/">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    Lab Activtiy 1
-                                </div>
-                            
-                                <div class="panel-body">
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                            <span class="sr-only">100% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-                        <a href="http://127.0.0.1:8000/teacher/progresstracker/student/">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    Lab Activtiy 2
-                                </div>
-                           
-                                <div class="panel-body">
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width: 70%">
-                                            <span class="sr-only">70% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-
-
-                        <a href="http://127.0.0.1:8000/teacher/progresstracker/student/">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    Lab Activtiy 3
-                                </div>
-                           
-                                <div class="panel-body">
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                            <span class="sr-only">0% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->

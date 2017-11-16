@@ -8,13 +8,15 @@ from .forms import LoginForm
 urlpatterns = [
     url(r'^$', AuthViews.login, {'template_name': 'login.html', 'authentication_form': LoginForm}, name='login'),
     url(r'^logout/$', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+
     # url(r'^student/$', views.student, name='student'),
     url(r'^home/$', views.home, name='home'),
-    url(r'^student/members/$', views.student_members, name='student_members'),
-    url(r'^student/labactivity/$', views.lab_activity, name='lab_activity'),
-    url(r'^student/labactivity/start/$', views.start, name='start'),
+    url(r'^home/members/$', views.student_members, name='student_members'),
+    url(r'^home/lab_activity/$', views.lab_activity, name='lab_activity'),
+    url(r'^home/labactivity/start/$', views.start, name='start'),
+
     # url(r'^teacher/$', views.teacher, name='teacher'),
-    url(r'^teacher/labactivity/$', views.labactivity, name='labactivity'),
-    url(r'^teacher/progresstracker/$', views.progresstracker, name='progresstracker'),
-    url(r'^teacher/progresstracker/student/$', views.progresstracker_student, name='progresstracker_student')
+    url(r'^home/labactivity/$', views.labactivity, name='labactivity'),
+    url(r'^home/progresstracker/$', views.progresstracker, name='progresstracker'),
+    url(r'^home/progresstracker/student/$', views.progresstracker_student, name='progresstracker_student')
 ]

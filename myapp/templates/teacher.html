@@ -104,66 +104,42 @@
             </div>
 
             <div class="row">
+                {% for labactivity in labactivities %}
                 <div class="col-md-4 col-sm-4">
+                    {% if labactivity.selected %}
                     <div class="panel panel-success">
-                        <div class="panel-heading">
-                            Lab Activity 1
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer" align="right">
-                            <div class="btn-group">
-                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a>Select</a></li>
-                                    <li><a href="http://127.0.0.1:8000/teacher/labactivity/">View</a></li>
-                                    <li><a>Hide</a></li>
-                              </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-4">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            Lab Activity 2
-                        </div>
-                        <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
-                        </div>
-                        <div class="panel-footer" align="right">
-                            <div class="btn-group">
-                                <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
-                                <ul class="dropdown-menu">
-                                    <li><a>Select</a></li>
-                                    <li><a href="http://127.0.0.1:8000/teacher/labactivity/">View</a></li>
-                                    <li><a>Hide</a></li>
-                              </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 col-sm-4">
+                    {% elif labactivity.hidden %}
                     <div class="panel panel-default">
+                    {% else %}
+                    <div class="panel panel-primary">
+                    {% endif %}
                         <div class="panel-heading">
-                            Lab Activity 3
+                            {{ labactivity.labname }}
                         </div>
                         <div class="panel-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum tincidunt est vitae ultrices accumsan. Aliquam ornare lacus adipiscing, posuere lectus et, fringilla augue.</p>
+                            <p>{{ labactivity.labsummary }}</p>
                         </div>
                         <div class="panel-footer" align="right">
                             <div class="btn-group">
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
-                                    <li><a>Select</a></li>
-                                    <li><a href="http://127.0.0.1:8000/teacher/labactivity/">View</a></li>
-                                    <li><a>Hide</a></li>
+                                    {% if labactivity.selected == False %}
+                                    <li><a href="/home/?func=0&id={{ labactivity.labid }}">Select</a></li>
+                                    {% else %}
+                                    <li><a href="/home/?func=1&id={{ labactivity.labid }}">Deselect</a></li>
+                                    {% endif %}
+                                    <li><a href="/home/labactivity/?id={{ labactivity.labid }}">View</a></li>
+                                    {% if labactivity.hidden == False %}
+                                    <li><a href="/home/?func=2&id={{ labactivity.labid }}">Hide</a></li>
+                                    {% else %}
+                                    <li><a href="/home/?func=3&id={{ labactivity.labid }}">Unhide</a></li>
+                                    {% endif %}
                               </ul>
                             </div>
                         </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
             
         </div>
