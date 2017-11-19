@@ -3,7 +3,8 @@ from myapp.forms import LoginForm
 from . import models
 from django.template import loader
 from myapp.models import Student, Group, LabActivity, LabProcedure, StudentGroup, Profile, LabProcedureStatus
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.conf import settings
 
 # Create your views here.
 def home(request):
@@ -41,12 +42,24 @@ def home(request):
 		if(uType == False):
 			# return render(request, "student.html", {})
 			template = loader.get_template('student.html')
+			myprofile = Profile.objects.get(user=request.user)
+			myprofile.loggedin = True
+			myprofile.save()
 		else:
 			# print(request.user.profile.facultyid.facultyname)
 			# return render(request, "teacher.html", {})
 			template = loader.get_template('teacher.html')
 
 		return HttpResponse(template.render(context, request))
+
+def logout(request):
+	myprofile = Profile.objects.get(user=request.user)
+	myprofile.loggedin = False
+	myprofile.save()
+
+	uType = request.user.profile.userType
+
+	return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
 
 # def student(request):
 # 	return render(request, "student.html", {})

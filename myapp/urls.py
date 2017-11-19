@@ -7,7 +7,8 @@ from .forms import LoginForm
 
 urlpatterns = [
     url(r'^$', AuthViews.login, {'template_name': 'login.html', 'authentication_form': LoginForm}, name='login'),
-    url(r'^logout/$', logout, {'next_page': settings.LOGOUT_REDIRECT_URL}, name='logout'),
+    # url(r'^logout/$', logout, {'next_page': '/'}, name='logout'),
+    url(r'^logout/$', views.logout, name='logout'),
 
     # url(r'^student/$', views.student, name='student'),
     url(r'^home/$', views.home, name='home'),
