@@ -58,6 +58,10 @@ def logout(request):
 	myprofile.save()
 
 	uType = request.user.profile.userType
+	if(uType == True):
+		labactivities = LabActivity.objects.get(selected=True)
+		labactivities.selected = False
+		labactivities.save()
 
 	return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
 
