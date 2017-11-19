@@ -42,13 +42,17 @@ def home(request):
 		if(uType == False):
 			# return render(request, "student.html", {})
 			template = loader.get_template('student.html')
-			myprofile = Profile.objects.get(user=request.user)
-			myprofile.loggedin = True
-			myprofile.save()
 		else:
 			# print(request.user.profile.facultyid.facultyname)
 			# return render(request, "teacher.html", {})
 			template = loader.get_template('teacher.html')
+
+		myprofile = Profile.objects.get(user=request.user)
+		myprofile.loggedin = True
+		myprofile.save()
+
+		# stud = Student(studentname='Practice Lang')
+		# stud.save()
 
 		return HttpResponse(template.render(context, request))
 
@@ -59,9 +63,13 @@ def logout(request):
 
 	uType = request.user.profile.userType
 	if(uType == True):
-		labactivities = LabActivity.objects.get(selected=True)
-		labactivities.selected = False
-		labactivities.save()
+		try:
+			lab = LabActivity.objects.get(selected=True)
+		except LabActivity.DoesNotExist:
+			lab = None
+		if(lab != None):
+			lab.selected = False
+			lab.save()
 
 	return HttpResponseRedirect(settings.LOGOUT_REDIRECT_URL)
 

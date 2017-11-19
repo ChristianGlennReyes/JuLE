@@ -11,6 +11,7 @@ class Faculty(models.Model):
 class Student(models.Model):
 	studentid = models.IntegerField(primary_key=True)
 	studentname = models.CharField(max_length=80, blank=True, null=True)
+	facultyid = models.ForeignKey(Faculty, models.DO_NOTHING)
 
 	def __str__(self):
 		return self.studentname
