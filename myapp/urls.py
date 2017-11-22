@@ -18,6 +18,10 @@ urlpatterns = [
 
     # url(r'^teacher/$', views.teacher, name='teacher'),
     url(r'^home/labactivity/$', views.labactivity, name='labactivity'),
-    url(r'^home/progresstracker/$', views.progresstracker, name='progresstracker'),
-    url(r'^home/progresstracker/student/$', views.progresstracker_student, name='progresstracker_student')
+    url(r'^home/groups/$', views.group, name='group'),
+    url(r'^home/groups/labactivity/$', views.group_labactivity, name='group_labactivity'),
+    url(r'^home/student/$', views.student, name='student'),
+    url(r'^home/student/add/$', views.addstudent, name='addstudent'),
+    url(r'^home/student/edit/$', views.editstudent, name='editstudent'),
+    url(r'^home/group/add/$', views.addgroup, name='addgroup'),
 ]

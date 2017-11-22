@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import ModelForm
 
 class Faculty(models.Model):
 	facultyid = models.IntegerField(primary_key=True)
@@ -63,6 +64,7 @@ class LabActivity(models.Model):
 	numprocedures = models.IntegerField()
 	hidden = models.BooleanField()
 	selected = models.BooleanField()
+	maximumpoint = models.FloatField()
 
 	def __str__(self):
 		return self.labname
@@ -82,22 +84,24 @@ class LabProcedure(models.Model):
 
 class GroupGrade(models.Model):
 	groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING)
+	labid = models.ForeignKey(LabActivity, models.DO_NOTHING)
 	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
-	gradeid = models.ForeignKey(Grade, models.DO_NOTHING)
+	grade = models.FloatField()
 
 	def __str__(self):
-		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.gradeid)
+		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.grade)
 
 class DataValue(models.Model):
 	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
 	groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING)
-	value = models.CharField(max_length=1000)
+	value = models.CharField(max_length=10000)
 
 	def __str__(self):
 		return str(self.procedureid) + " - " + str(self.groupid) + " - " + str(self.value)
 
 class LabProcedureStatus(models.Model):
 	groupid = models.ForeignKey(StudentGroup, models.DO_NOTHING)
+	labid = models.ForeignKey(LabActivity, models.DO_NOTHING)
 	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
 	status = models.BooleanField()
 

@@ -1,10 +1,11 @@
-from django.shortcuts import render
-from myapp.forms import LoginForm
-from . import models
+from django.shortcuts import render, redirect
+from myapp.forms import LoginForm, StudentForm, GroupForm
+from . import models, forms
 from django.template import loader
 from myapp.models import Student, Group, LabActivity, LabProcedure, StudentGroup, Profile, LabProcedureStatus
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
+from django.contrib.auth.models import User
 
 # Create your views here.
 def home(request):
@@ -34,6 +35,8 @@ def home(request):
 				elif(func == '3'): # Unhide
 					labactivity.hidden = False
 					labactivity.save()
+
+				return redirect('home')
 
 		uType = request.user.profile.userType
 		context = {
@@ -97,16 +100,19 @@ def lab_activity(request):
 
 def start(request):
 	if request.method=='GET':
-		id = request.GET.get('id')
-	template = loader.get_template('student_labactivity_start.html')
-	context = {
-		'labprocedures': LabProcedure.objects.filter(labid=id),
-		'labactivities': LabActivity.objects.filter(pk=id)
-	}
-	return HttpResponse(template.render(context, request))
+		labid = request.GET.get('id')
 
-# def teacher(request):
-# 	return render(request, "teacher.html", {})
+	labprocedures = LabProcedure.objects.filter(labid=labid)
+	labactivities = LabActivity.objects.filter(pk=labid)
+
+	initiallabproceddure = 0
+	ctr = 0
+	for labprocedure in labprocedures:
+		if(ctr == 0):
+			initiallabproceddure = labprocedure.procedureid
+		ctr = ctr + 1
+
+	return render(request, "student_labactivity_start.html", locals())
 
 def labactivity(request):
 	if request.method=='GET':
@@ -119,18 +125,100 @@ def labactivity(request):
 	# return render(request, "student_labactivity.html", {})
 	return HttpResponse(template.render(context, request))
 
-def progresstracker(request):
-	template = loader.get_template('teacher_progresstracker.html')
+def group(request):
+	studentgroups = StudentGroup.objects.filter(facultyid=request.user.profile.facultyid)
+	groups = Group.objects.all()
+	students = Student.objects.all()
+	profiles = Profile.objects.all()
+	labactivities = LabActivity.objects.all()
+	labprocedures = LabProcedure.objects.all()
+	labprocedurestatus = LabProcedureStatus.objects.all()
+	
+	# progress = {'group1':10}
+	return render(request, "teacher_group.html", locals())
+
+def group_labactivity(request):
+	return render(request, "teacher_group_student.html", locals())
+
+def student(request):
+	template = loader.get_template('teacher_student.html')
 	context = {
-		'studentgroups': StudentGroup.objects.filter(facultyid=request.user.profile.facultyid),
-		'groups': Group.objects.all(),
-		'students': Student.objects.all(),
-		'profiles': Profile.objects.all(),
-		'labactivities': LabActivity.objects.all(),
-		'labprocedures': LabProcedure.objects.all(),
-		# 'labprocedurestatuses': LabProcedureStatus.objects.all()
+		'students': Student.objects.filter(facultyid=request.user.profile.facultyid)
 	}
 	return HttpResponse(template.render(context, request))
 
-def progresstracker_student(request):
-	return render(request, "teacher_progresstracker_student.html", {})
+def addstudent(request):
+	if(request.method=="POST"):
+		form = forms.StudentForm(request.POST)
+		if form.is_valid():
+			curruser = request.user.profile.facultyid
+			studentname = form.cleaned_data['studentname']
+			if(Student.objects.filter(studentname=studentname)):
+				print('Student exist')
+			else:
+				studentinput = Student(studentname=studentname, facultyid=curruser)
+				studentinput.save()
+
+			print(request.POST.get('saveadd'))
+			if request.POST.get("saveadd"):
+				print('pasosk')
+				return redirect('addstudent')
+			elif request.POST.get("save"):
+				return redirect('student')					
+	else:
+		form = forms.StudentForm()
+
+	return render(request, "teacher_student_add.html", locals())
+
+def editstudent(request):
+	return render(request, "teacher_student_edit.html", locals())
+
+def addgroup(request):
+	students = Student.objects.filter(facultyid=request.user.profile.facultyid)
+	groups = Group.objects.all()
+
+	namelists = []
+
+	for student in students:
+		ctr = False
+		for group in groups:
+			if(student == group.studentid):
+				ctr = True
+		if(ctr == False):
+			namelists.append(student.studentname)
+
+	if(request.method=="POST"):
+		form = forms.GroupForm(request.POST)
+		if form.is_valid():
+			curruser = request.user.profile.facultyid
+			username = form.cleaned_data['username']
+			groupname = form.cleaned_data['groupname']
+			password = form.cleaned_data['password']
+			repassword = form.cleaned_data['repassword']
+			selected = request.POST.getlist('selectedstudents')
+
+			if(StudentGroup.objects.filter(groupname=groupname)):
+				print('Group already exist')
+			else:
+				if(password == repassword):
+					studentgroup = StudentGroup(facultyid=request.user.profile.facultyid, groupname=groupname)
+					studentgroup.save()
+					user = User.objects.create_user(username=username, password=password)
+					studentgroup = StudentGroup.objects.get(groupname=groupname)
+					profile = Profile(user=user, userType=0, facultyid=request.user.profile.facultyid, groupid=studentgroup, loggedin=0)
+					profile.save()
+
+					for selects in selected:
+						student = Student.objects.get(studentname=selects)
+						group = Group(groupid=studentgroup, studentid=student)
+						group.save()
+
+					return redirect('addgroup')
+
+				else:
+					print('Wrong Password')
+
+	else:
+		form = forms.GroupForm()
+
+	return render(request, "teacher_group_add.html", locals())	

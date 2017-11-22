@@ -67,7 +67,6 @@
                                 </div>
                                 <hr />
                                 <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Logout</a>
-
                             </div>
                         </li>
 
@@ -85,8 +84,9 @@
                     <div class="navbar-collapse collapse ">
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'home' %}">Lab Activities</a></li>
-                            <li><a class="menu-top-active" href="{% url 'progresstracker' %}">Progress Tracker</a></li>
-
+                            <li><a href="">Progress Tracker</a></li>
+                            <li><a class="menu-top-active" href="{% url 'group' %}">Groups</a></li>
+                            <li><a href="{% url 'student' %}">Students</a></li>
                         </ul>
                     </div>
                 </div>
@@ -99,63 +99,37 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="page-head-line">Groups</h4>
+                    <h4 class="page-head-line">Add Group</h4>
                 </div>
             </div>
 
-            {% for studentgroup in studentgroups %}
-
-            {% for profile in profiles %}
-                {% if studentgroup == profile.groupid %}
-                    {% if profile.loggedin %}
-                        <div class="panel panel-success">
-                    {% else %}
-                        <div class="panel panel-default">
+            <div class="row">
+                <div class="col-md-6">
+                    {% if form.has_errors %}
+                    <p>Group already exist!</p>
                     {% endif %}
-                {% endif %}
-            {% endfor %}
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#{{ studentgroup.groupid }}" class="collapsed">{{ studentgroup.groupname }}</a>
-                    </h4>
-                </div>
-                <div id="{{ studentgroup.groupid }}" class="panel-collapse collapse" style="height: 0px;">
-                    <div class="panel-body">
-                        <div class="col-md-12">
-                        {% for group in groups %}
-                            {% for student in students %}
-                                {% if studentgroup == group.groupid and student == group.studentid%}
-                                <div class="col-md-3">
-                                    {{ student.studentname }}
-                                </div>
-                                {% endif %}    
+                    <form method="POST">
+                        <label>Username: </label>
+                        {{ form.username }}
+                        <label>Group Name: </label>
+                        {{ form.groupname }}
+                        <label>Password: </label>
+                        {{ form.password }}
+                        <label>Input password again: </label>
+                        {{ form.repassword }}
+                        <label>Students:</label>
+                        <select multiple="" class="form-control" name="selectedstudents">
+                            {% for namelist in namelists %}
+                                <option value="{{ namelist }}">{{ namelist }}</option>
                             {% endfor %}
-                        {% endfor %}
-                        </div>
-                        <br><br><br>
-
-                        {% for labactivity in labactivities %}
-                        {% if labactivity.hidden == False %}
-                        <a href="{% url 'progresstracker_student' %}">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    {{ labactivity.labname }}
-                                </div>
-                                <div class="panel-body">
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                            <span class="sr-only">100% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        {% endif %}
-                        {% endfor %}
-                    </div>
+                        </select>
+                        <hr />
+                        <!-- <a href="http://127.0.0.1:8000/student/" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Log Me In </a>&nbsp; -->
+                        <button type="submit" class="btn btn-info">Submit</button>
+                        {% csrf_token %}
+                    </form>
                 </div>
             </div>
-            {% endfor %}
         </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->

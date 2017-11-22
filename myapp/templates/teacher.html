@@ -85,9 +85,9 @@
                     <div class="navbar-collapse collapse ">
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
                             <li><a class="menu-top-active" href="{% url 'home' %}">Lab Activities</a></li>
-                            <li><a href="{% url 'progresstracker' %}">Progress Tracker</a></li>
-                            <li><a href="">Group</a></li>
-                            <li><a href="">Student</a></li>
+                            <li><a href="">Progress Tracker</a></li>
+                            <li><a href="{% url 'group' %}">Groups</a></li>
+                            <li><a href="{% url 'student' %}">Students</a></li>
                         </ul>
                     </div>
                 </div>
@@ -129,12 +129,12 @@
                                     {% else %}
                                     <li><a href="/home/?func=1&id={{ labactivity.labid }}">Deselect</a></li>
                                     {% endif %}
-                                    <li><a href="/home/labactivity/?id={{ labactivity.labid }}">View</a></li>
                                     {% if labactivity.hidden == False %}
                                     <li><a href="/home/?func=2&id={{ labactivity.labid }}">Hide</a></li>
                                     {% else %}
                                     <li><a href="/home/?func=3&id={{ labactivity.labid }}">Unhide</a></li>
                                     {% endif %}
+                                    <li><a href="/home/labactivity/?id={{ labactivity.labid }}">View</a></li>
                               </ul>
                             </div>
                         </div>

@@ -26,7 +26,6 @@
     <![endif]-->
 
     <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     
     <!-- Optional SmartWizard theme -->
     <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
@@ -100,31 +99,24 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="page-head-line">Students <a href="{% url 'addstudent' %}" class="btn btn-danger btn-xs">Add +</a></h4>
+                    <h4 class="page-head-line">Edit Student</h4>
                 </div>
             </div>
 
             <div class="row">
-                <div class="table-responsive">
-                    <table class="table table-striped" id="studenttable">
-                        <thead>
-                            <tr>
-                                <th>Student ID</th>
-                                <th>Full Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for student in students %}
-                            <tr>
-                                <td>{{ student.studentid }}</td>
-                                <td><a href="{% url 'editstudent' %}">{{ student.studentname }}</a></td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <div class="col-md-6">
+                    {% if form.has_errors %}
+                    <p>Student already exist!</p>
+                    {% endif %}
+                    <form method="POST">
+                        <label>Student Name: </label>
+                        {{ form.studentname }}
+                        <hr />
+                        <button type="submit" class="btn btn-info" id="save">Save</button>
+                        {% csrf_token %}
+                    </form>
                 </div>
             </div>
-            
         </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->
@@ -141,28 +133,20 @@
     <!-- FOOTER SECTION END-->
     <!-- JAVASCRIPT AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
     <!-- CORE JQUERY SCRIPTS -->
-
     <script src="{% static 'js/jquery-1.11.1.js' %}"></script>
     <!-- BOOTSTRAP SCRIPTS  -->
     <script src="{% static 'js/bootstrap.js' %}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
-    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('#studenttable').DataTable({
-                "bInfo": false,
-                /*"bPaginate": false,*/
-
-                aLengthMenu: [
-                    [50, 100, -1],
-                    [50, 100, "All"]
-                ]
-            });
+    <!-- <script type="text/javascript">
+        $('#saveandadd').click(function() {
+            this.form.HiddenInput.value = "saveandadd"
         });
-    </script>
+        $('#save').click(function() {
+            this.form.HiddenInput.value = "save"
+        });
+    </script> -->
 
     <!-- Include SmartWizard JavaScript source -->
 </body>
