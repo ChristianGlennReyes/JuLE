@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from myapp.forms import LoginForm, StudentForm, GroupForm
 from . import models, forms
 from django.template import loader
-from myapp.models import Student, Group, LabActivity, LabProcedure, StudentGroup, Profile, LabProcedureStatus
+from myapp.models import Student, Group, GroupGrade, LabActivity, LabProcedure, StudentGroup, Profile
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -25,6 +25,19 @@ def home(request):
 					labactivity.selected = True
 					labactivity.hidden = False
 					labactivity.save()
+
+					groups = StudentGroup.objects.filter(facultyid=request.user.profile.facultyid)
+					labprocedures = LabProcedure.objects.filter(labid=labactivity)
+
+					for group in groups:
+						for labprocedure in labprocedures:
+							groupgrade = GroupGrade.objects.filter(groupid=group, labid=labactivity, procedureid=labprocedure)
+							if groupgrade:
+								print('Group grade existing')
+							else:
+								groupgrade = GroupGrade(groupid=group, labid=labactivity, procedureid=labprocedure, grade=0, status=False)
+								groupgrade.save()
+
 				elif(func == '1'): # Deselect
 					labactivity.selected = False
 					labactivity.save()
@@ -132,7 +145,8 @@ def group(request):
 	profiles = Profile.objects.all()
 	labactivities = LabActivity.objects.all()
 	labprocedures = LabProcedure.objects.all()
-	labprocedurestatus = LabProcedureStatus.objects.all()
+	labprocedurestatus = GroupGrade.objects.all()
+	groupgrades = GroupGrade.objects.all()
 	
 	# progress = {'group1':10}
 	return render(request, "teacher_group.html", locals())
@@ -228,9 +242,18 @@ def editgroup(request):
 			for user in users:
 				user.delete()
 			profile.delete()
-		studentgroups = StudentGroup.objects.filter(groupid=request.GET.get('id'))
-		for studentgroup in studentgroups:
-			studentgroup.delete()
+		studentgroup = StudentGroup.objects.get(groupid=request.GET.get('id'))
+
+		groupgrades = GroupGrade.objects.filter(groupid=studentgroup)
+		for groupgrade in groupgrades:
+			groupgrade.delete()
+
+		labprocedurestatuss = GroupGrade.objects.filter(groupid=studentgroup)
+		for labprocedurestatus in labprocedurestatuss:
+			labprocedurestatus.delete()
+
+		studentgroup.delete()
+
 		return redirect('group')
 	elif request.POST.get("save"):
 		studentgroup = StudentGroup.objects.get(groupid=request.GET.get('id'))
@@ -341,3 +364,5 @@ def editstudent(request):
 
 	return render(request, "teacher_student_edit.html", locals())
 
+def progress(request):
+	return render(request, "teacher_progress.html", locals())
