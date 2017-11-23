@@ -375,4 +375,5 @@ def progress(request):
 	return render(request, "teacher_progress.html", locals())
 
 def grade(request):
+	
 	return render(request, "teacher_grade.html", locals())
