@@ -140,39 +140,6 @@ def group(request):
 def group_labactivity(request):
 	return render(request, "teacher_group_student.html", locals())
 
-def student(request):
-	template = loader.get_template('teacher_student.html')
-	context = {
-		'students': Student.objects.filter(facultyid=request.user.profile.facultyid)
-	}
-	return HttpResponse(template.render(context, request))
-
-def addstudent(request):
-	if(request.method=="POST"):
-		form = forms.StudentForm(request.POST)
-		if form.is_valid():
-			curruser = request.user.profile.facultyid
-			studentname = form.cleaned_data['studentname']
-			if(Student.objects.filter(studentname=studentname)):
-				print('Student exist')
-			else:
-				studentinput = Student(studentname=studentname, facultyid=curruser)
-				studentinput.save()
-
-			print(request.POST.get('saveadd'))
-			if request.POST.get("saveadd"):
-				print('pasosk')
-				return redirect('addstudent')
-			elif request.POST.get("save"):
-				return redirect('student')					
-	else:
-		form = forms.StudentForm()
-
-	return render(request, "teacher_student_add.html", locals())
-
-def editstudent(request):
-	return render(request, "teacher_student_edit.html", locals())
-
 def addgroup(request):
 	students = Student.objects.filter(facultyid=request.user.profile.facultyid)
 	groups = Group.objects.all()
@@ -213,7 +180,10 @@ def addgroup(request):
 						group = Group(groupid=studentgroup, studentid=student)
 						group.save()
 
-					return redirect('addgroup')
+					if request.POST.get("saveadd"):
+						return redirect('addgroup')
+					elif request.POST.get("save"):
+						return redirect('group')	
 
 				else:
 					print('Wrong Password')
@@ -222,3 +192,152 @@ def addgroup(request):
 		form = forms.GroupForm()
 
 	return render(request, "teacher_group_add.html", locals())	
+
+def editgroup(request):
+	if request.method=='GET':
+		myid = request.GET.get('id')
+		studentgroups = StudentGroup.objects.filter(groupid=myid)
+
+		for mystudentgroup in studentgroups:
+			profiles = Profile.objects.filter(groupid=mystudentgroup)
+			groups = Group.objects.filter(groupid=mystudentgroup)
+
+		for myprofile in profiles:
+			users = User.objects.filter(username=myprofile)
+
+		students = Student.objects.filter(facultyid=request.user.profile.facultyid)
+		mygroups = Group.objects.all()
+		
+		namelists = []
+
+		for student in students:
+			ctr = False
+			for group in mygroups:
+				if(student == group.studentid):
+					ctr = True
+			if(ctr == False):
+				namelists.append(student.studentname)
+
+	if request.POST.get("delete"):
+		groups = Group.objects.filter(groupid=request.GET.get('id'))
+		for group in groups:
+			group.delete()
+		profiles = Profile.objects.filter(groupid=request.GET.get('id'))
+		for profile in profiles:
+			users = User.objects.filter(username=profile.user)
+			for user in users:
+				user.delete()
+			profile.delete()
+		studentgroups = StudentGroup.objects.filter(groupid=request.GET.get('id'))
+		for studentgroup in studentgroups:
+			studentgroup.delete()
+		return redirect('group')
+	elif request.POST.get("save"):
+		studentgroup = StudentGroup.objects.get(groupid=request.GET.get('id'))
+		if studentgroup.groupname == request.POST['groupname']:
+			print('Same groupname')
+		else:
+			studentgroups = StudentGroup.objects.filter(groupname=request.POST['groupname'], facultyid=request.user.profile.groupid)
+			if studentgroups:
+				print('Student group name already exists')
+			else:
+				savegroupname = StudentGroup.objects.get(groupid=request.GET.get('id'))
+				savegroupname.groupname = request.POST['groupname']
+				savegroupname.save()
+
+		profile = Profile.objects.get(groupid=studentgroup)
+		user = User.objects.get(username=profile.user)
+		if user.username == request.POST['username']:
+			print('Same username')
+		else:
+			users = User.objects.filter(username=request.POST['username'])
+			if users:
+				print('Username already exists')
+			else:
+				user.username = request.POST['username']
+				user.save()
+
+		ingroups = request.POST.getlist('ingroup')
+
+		for ingroup in ingroups:
+			student = Student.objects.get(studentname=ingroup)
+			group = Group.objects.filter(studentid=student)
+			if group:
+				print('Has group')
+			else:
+				newGroup = Group(groupid=studentgroup, studentid=student)
+				newGroup.save()
+
+		nogroups = request.POST.getlist('nogroup')
+
+		for nogroup in nogroups:
+			student = Student.objects.get(studentname=nogroup)
+			group = Group.objects.filter(studentid=student)
+			if group:
+				for mygroup in group:
+					mygroup.delete()
+			else:
+				print('No group')
+
+		return redirect('group')
+
+	return render(request, "teacher_group_edit.html", locals())		
+
+def student(request):
+	template = loader.get_template('teacher_student.html')
+	context = {
+		'students': Student.objects.filter(facultyid=request.user.profile.facultyid)
+	}
+	return HttpResponse(template.render(context, request))
+
+def addstudent(request):
+	if(request.method=="POST"):
+		form = forms.StudentForm(request.POST)
+		if form.is_valid():
+			curruser = request.user.profile.facultyid
+			studentname = form.cleaned_data['studentname']
+			if(Student.objects.filter(studentname=studentname)):
+				print('Student exist')
+				return redirect('addstudent')
+			else:
+				studentinput = Student(studentname=studentname, facultyid=curruser)
+				studentinput.save()
+
+			if request.POST.get("saveadd"):
+				return redirect('addstudent')
+			elif request.POST.get("save"):
+				return redirect('student')					
+	else:
+		form = forms.StudentForm()
+
+	return render(request, "teacher_student_add.html", locals())
+
+def editstudent(request):
+	if request.method=='GET':
+		myid = request.GET.get('id')
+		student = Student.objects.filter(studentid=myid)
+
+	if request.method=='POST':
+		myid = request.GET.get('id')
+		student = Student.objects.get(studentid=myid)
+		if request.POST.get("delete"):
+			group = Group.objects.filter(studentid=student)
+			if group:
+				group.delete()
+			mystudent = Student.objects.get(studentid=myid)
+			mystudent.delete()
+		elif request.POST.get("save"):
+			students = Student.objects.filter(studentname=request.POST['studentname'])
+
+			if students:
+				for values in students:
+					if student.studentname == request.POST['studentname']:
+						print('Same name')
+				print('Student already exist')
+			else:
+				student.studentname = request.POST['studentname']
+				student.save()
+		return redirect('student')
+
+	return render(request, "teacher_student_edit.html", locals())
+

@@ -117,7 +117,12 @@
             {% endfor %}
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#{{ studentgroup.groupid }}" class="collapsed">{{ studentgroup.groupname }}</a>
+                        <div class="col-md-11" style="padding-left: 0px; padding-right: 0px">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#{{ studentgroup.groupid }}" class="collapsed">{{ studentgroup.groupname }}</a>    
+                        </div>
+                        <div align="right">
+                            <a href="{% url 'editgroup' %}?id={{ studentgroup.groupid }}" class="btn btn-danger btn-xs" align="right" style="color:#fff">Edit</a>
+                        </div>
                     </h4>
                 </div>
                 <div id="{{ studentgroup.groupid }}" class="panel-collapse collapse" style="height: 0px;">

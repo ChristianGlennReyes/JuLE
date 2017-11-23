@@ -99,43 +99,41 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="page-head-line">Add Group</h4>
+                    <h4 class="page-head-line">Edit Group</h4>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
                     {% if form.has_errors %}
-                    <p>Group already exist!</p>
+                    <p>Student already exist!</p>
                     {% endif %}
                     <form method="POST">
                         <label>Username: </label>
-                        {{ form.username }}
+                        {% for user in users %}
+                        <input type="text" id="sample" name="username" value="{{ user.username }}" maxlength="30" class="form-control" required="">
+                        {% endfor %}
                         <label>Group Name: </label>
-                        {{ form.groupname }}
-                        <label>Password: </label>
-                        {{ form.password }}
-                        <label>Input password again: </label>
-                        {{ form.repassword }}
-                        <label>Students:</label>
-                        <select multiple="" class="form-control" name="selectedstudents" id="ingroup">
+                        {% for studentgroup in studentgroups %}
+                        <input type="text" name="groupname" value="{{ studentgroup.groupname }}" maxlength="80" class="form-control" required="">
+                        {% endfor %}
+                        <label>Students in the group:</label>
+                        <select multiple="" class="form-control" name="ingroup" id="ingroup">
+                            {% for group in groups %}
+                                <option value="{{ group.studentid.studentname }}">{{ group.studentid.studentname }}</option>
+                            {% endfor %}
                         </select>
                         <div align="center">
                             <input type="button" class="btn btn-default" style="margin-top: 15px" value="Remove" onclick="remove()">
                         </div>
                         <hr />
-                        <!-- <a href="http://127.0.0.1:8000/student/" class="btn btn-info"><span class="glyphicon glyphicon-user"></span> &nbsp;Log Me In </a>&nbsp; -->
-                        <button type="submit" class="btn btn-info" onclick="selectall()" name="saveadd" value="saveadd">Save and add another</button>
+                        <button type="submit" class="btn btn-danger" name="delete" value="delete">Delete</button>
                         <button type="submit" class="btn btn-info" onclick="selectall()" name="save" value="save">Save</button>
                         {% csrf_token %}
                 </div>
                 <div class="col-md-6">
                     <div style="visibility: hidden">
                         <label>Username: </label>
-                        <input type="text" class="form-control">
-                        <label>Group Name: </label>
-                        <input type="text" class="form-control">
-                        <label>Group Name: </label>
                         <input type="text" class="form-control">
                         <label>Group Name: </label>
                         <input type="text" class="form-control">
@@ -149,8 +147,8 @@
                     <div align="center">
                         <input type="button" class="btn btn-default" style="margin-top: 15px" value="Add" onclick="add()">
                     </div>
-                    <hr />
                     </form>
+                    <hr />
                 </div>
             </div>
         </div>
@@ -175,12 +173,22 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
+
+
+    <!-- <script type="text/javascript">
+        $('#saveandadd').click(function() {
+            this.form.HiddenInput.value = "saveandadd"
+        });
+        $('#save').click(function() {
+            this.form.HiddenInput.value = "save"
+        });
+    </script> -->
+
     <script type="text/javascript">
         function remove()
         {
             var studentwithgroup = document.getElementById("ingroup");
             var studentnogroup = document.getElementById("nogroup");
-            console.log(studentwithgroup);
 
             // Remember selected items.
             var is_selected = [];
@@ -214,11 +222,6 @@
             var studentwithgroup = document.getElementById("ingroup");
             var studentnogroup = document.getElementById("nogroup");
 
-            /*if(studentwithgroup == null) {
-                studentwithgroup = '<select multiple="" class="form-control" name="nogroup" id="nogroup"></select>';
-            }
-            console.log(studentwithgroup)*/
-
             // Remember selected items.
             var is_selected = [];
             for (var i = 0; i < studentnogroup.options.length; ++i)
@@ -246,12 +249,20 @@
                 }
             }
         }
-        function selectall() {
-            selectBox = document.getElementById("ingroup");
+        function selectall()
+        {
+            ingroup = document.getElementById("ingroup");
 
-            for (var i = 0; i < selectBox.options.length; i++) 
+            for (var i = 0; i < ingroup.options.length; i++) 
             { 
-                 selectBox.options[i].selected = true; 
+                 ingroup.options[i].selected = true; 
+            }
+
+            nogroup = document.getElementById("nogroup");
+
+            for (var i = 0; i < nogroup.options.length; i++) 
+            { 
+                 nogroup.options[i].selected = true; 
             }
         }
     </script>

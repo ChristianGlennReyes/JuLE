@@ -110,9 +110,12 @@
                     {% endif %}
                     <form method="POST">
                         <label>Student Name: </label>
-                        {{ form.studentname }}
+                        {% for stud in student %}
+                        <input type="text" name="studentname" value="{{ stud.studentname }}" maxlength="80" class="form-control" required="">
+                        {% endfor %}
                         <hr />
-                        <button type="submit" class="btn btn-info" id="save">Save</button>
+                        <button type="submit" class="btn btn-danger" name="delete" value="delete">Delete</button>
+                        <button type="submit" class="btn btn-info" name="save" value="save">Save</button>
                         {% csrf_token %}
                     </form>
                 </div>

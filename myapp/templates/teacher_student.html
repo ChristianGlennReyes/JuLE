@@ -117,7 +117,7 @@
                             {% for student in students %}
                             <tr>
                                 <td>{{ student.studentid }}</td>
-                                <td><a href="{% url 'editstudent' %}">{{ student.studentname }}</a></td>
+                                <td><a href="/home/student/edit/?id={{ student.studentid }}">{{ student.studentname }}</a></td>
                             </tr>
                             {% endfor %}
                         </tbody>
