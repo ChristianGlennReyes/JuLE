@@ -21,8 +21,9 @@ urlpatterns = [
     url(r'^home/group/$', views.group, name='group'),
     url(r'^home/group/add/$', views.addgroup, name='addgroup'),
     url(r'^home/group/edit/$', views.editgroup, name='editgroup'),
-    url(r'^home/groups/labactivity/$', views.group_labactivity, name='group_labactivity'),
+    # url(r'^home/groups/labactivity/$', views.group_labactivity, name='group_labactivity'),
     url(r'^home/student/$', views.student, name='student'),
     url(r'^home/student/add/$', views.addstudent, name='addstudent'),
     url(r'^home/student/edit/$', views.editstudent, name='editstudent'),
+    url(r'^home/progress/$', views.progress, name='progress'),
 ]

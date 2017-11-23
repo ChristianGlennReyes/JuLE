@@ -87,9 +87,10 @@ class GroupGrade(models.Model):
 	labid = models.ForeignKey(LabActivity, models.DO_NOTHING)
 	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
 	grade = models.FloatField()
+	status = models.BooleanField()
 
 	def __str__(self):
-		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.grade)
+		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.grade) + " - " + str(self.status)
 
 class DataValue(models.Model):
 	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
