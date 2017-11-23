@@ -26,4 +26,5 @@ urlpatterns = [
     url(r'^home/student/add/$', views.addstudent, name='addstudent'),
     url(r'^home/student/edit/$', views.editstudent, name='editstudent'),
     url(r'^home/progress/$', views.progress, name='progress'),
+    url(r'^home/grade/$', views.grade, name='grade'),
 ]

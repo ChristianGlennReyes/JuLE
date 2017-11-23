@@ -365,4 +365,14 @@ def editstudent(request):
 	return render(request, "teacher_student_edit.html", locals())
 
 def progress(request):
+	selectedlab = LabActivity.objects.filter(selected=True)
+	isTrue = False
+	if selectedlab:
+		isTrue = True
+	studentgroups = StudentGroup.objects.filter(facultyid=request.user.profile.facultyid)
+	profiles = Profile.objects.all()
+	groupgrades = GroupGrade.objects.all()
 	return render(request, "teacher_progress.html", locals())
+
+def grade(request):
+	return render(request, "teacher_grade.html", locals())

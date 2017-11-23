@@ -88,6 +88,7 @@
                             <li><a href="{% url 'progress' %}" class="menu-top-active">Progress Tracker</a></li>
                             <li><a href="{% url 'group' %}">Groups</a></li>
                             <li><a href="{% url 'student' %}">Students</a></li>
+                            <li><a href="{% url 'grade' %}">Grade</a></li>
                         </ul>
                     </div>
                 </div>
@@ -100,14 +101,71 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="page-head-line">Progress Tracker</h4>
+                    <h4 class="page-head-line">Progress Tracker
+                    {% for selected in selectedlab %}
+                        {% if selected.selected == True %}
+                            : {{ selected.labname }}
+                        {% endif %}
+                    {% endfor %}
+                    </h4>
                 </div>
             </div>
 
-            <div class="row">
-                
-            </div>
-            
+            {% if isTrue == True %}
+                {% for studentgroup in studentgroups %}
+                <div class="row">
+                    {% for profile in profiles %}
+                        {% if profile.groupid == studentgroup %}
+                            {% if profile.loggedin %}
+                                <div class="panel panel-success">
+                            {% else %}
+                                <div class="panel panel-default">
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                        <div class="panel-heading">
+                            {{ studentgroup.groupname }}
+                        </div>
+                        <div class="panel-body">
+                            <div class="progress progress-striped active">
+                                <script>
+                                    var totalprogress = 0.0;
+                                    var totalprocedures = 0.0;
+                                </script>
+                                {% for groupgrade in groupgrades %}
+                                    {% if groupgrade.groupid == studentgroup %}
+                                        {% for select in selectedlab %}
+                                            {% if groupgrade.labid == select %}
+                                                <script>
+                                                    totalprocedures++;
+                                                </script>
+                                                {% if groupgrade.status == True %}
+                                                    <script>
+                                                        totalprogress++;
+                                                    </script>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                                <script>
+                                    var percentage = totalprogress / totalprocedures * 100
+                                </script>
+                                <div id="{{ studentgroup.groupid }}" class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                    <!-- <span class="sr-only">40% Complete (success)</span> -->
+                                </div>
+                                <script>
+                                    document.getElementById({{ studentgroup.groupid }}).style.width = percentage + "%";
+                                    console.log(percentage)
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <h3>No selected lab activity</h3>
+            {% endif %}
         </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->

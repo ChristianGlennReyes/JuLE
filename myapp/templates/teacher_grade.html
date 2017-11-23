@@ -12,12 +12,12 @@
         <![endif]-->
     <title>JuLE</title>
     <!-- BOOTSTRAP CORE STYLE  -->
-    <link href="{% static '/css/bootstrap.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
     <!-- FONT AWESOME ICONS  -->
-    <link href="{% static '/css/font-awesome.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet" />
     <!-- CUSTOM STYLE  -->
-    <link href="{% static '/css/style.css' %}" rel="stylesheet" />
-    <link href="{% static '/css/mystyle.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/mystyle.css' %}" rel="stylesheet" />
      <!-- HTML5 Shiv and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -25,12 +25,12 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link href="{% static '/css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
     
     <!-- Optional SmartWizard theme -->
-    <link href="{% static '/css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static '/css/smart_wizard_theme_arrows.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static '/css/smart_wizard_theme_dots.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/smart_wizard_theme_arrows.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/smart_wizard_theme_dots.css' %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="navbar navbar-inverse set-radius-zero">
@@ -43,7 +43,7 @@
                 </button>
                 <a class="navbar-brand" href="{% url 'home' %}">
 
-                    <img src="{% static '/img/logo1.png' %}" />
+                    <img src="{% static 'img/logo1.png' %}" />
                 </a>
 
             </div>
@@ -59,7 +59,7 @@
                             <div class="dropdown-menu dropdown-settings">
                                 <div class="media">
                                     <a class="media-left" href="#">
-                                        <img src="{% static '/img/64-64.jpg' %}" alt="" class="img-rounded" />
+                                        <img src="{% static 'img/64-64.jpg' %}" alt="" class="img-rounded" />
                                     </a>
                                     <div class="media-body">
                                         <h4 class="media-heading">{{ user.profile.facultyid.facultyname }}</h4>
@@ -84,11 +84,11 @@
                 <div class="col-md-12">
                     <div class="navbar-collapse collapse ">
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
-                            <li><a class="menu-top-active" href="{% url 'home' %}">Lab Activities</a></li>
+                            <li><a href="{% url 'home' %}">Lab Activities</a></li>
                             <li><a href="{% url 'progress' %}">Progress Tracker</a></li>
                             <li><a href="{% url 'group' %}">Groups</a></li>
                             <li><a href="{% url 'student' %}">Students</a></li>
-                            <li><a href="{% url 'grade' %}">Grade</a></li>
+                            <li><a href="{% url 'grade' %}" class="menu-top-active">Grade</a></li>
                         </ul>
                     </div>
                 </div>
@@ -101,19 +101,12 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    {% for labactivity in labactivities %}
-                    <h4 class="page-head-line">{{ labactivity.labname }}</h4>
-                    {% endfor %}
+                    <h4 class="page-head-line">Grade</h4>
                 </div>
             </div>
 
-            <div>
-                {% for labprocedure in labprocedures %}
-                <div id="step-{{ labprocedure.stepnum }}" class="">
-                    <h2>Step {{labprocedure.stepnum}}: {{ labprocedure.procedurename }}</h2>
-                    {{ labprocedure.proceduredesc }}
-                </div>
-                {% endfor %}
+            <div class="row">
+                
             </div>
         </div>
     </div>
@@ -131,9 +124,9 @@
     <!-- FOOTER SECTION END-->
     <!-- JAVASCRIPT AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
     <!-- CORE JQUERY SCRIPTS -->
-    <script src="{% static '/js/jquery-1.11.1.js' %}"></script>
+    <script src="{% static 'js/jquery-1.11.1.js' %}"></script>
     <!-- BOOTSTRAP SCRIPTS  -->
-    <script src="{% static '/js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
