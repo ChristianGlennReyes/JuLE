@@ -26,6 +26,7 @@
     <![endif]-->
 
     <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     
     <!-- Optional SmartWizard theme -->
     <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
@@ -105,16 +106,15 @@
             </div>
 
             {% for studentgroup in studentgroups %}
-
-            {% for profile in profiles %}
-                {% if studentgroup == profile.groupid %}
-                    {% if profile.loggedin %}
-                        <div class="panel panel-success">
-                    {% else %}
-                        <div class="panel panel-default">
+                {% for profile in profiles %}
+                    {% if studentgroup == profile.groupid %}
+                        {% if profile.loggedin %}
+                            <div class="panel panel-success">
+                        {% else %}
+                            <div class="panel panel-default">
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-            {% endfor %}
+                {% endfor %}
                 <div class="panel-heading">
                     <h4 class="panel-title">
                         <div class="col-md-11" style="padding-left: 0px; padding-right: 0px">
@@ -140,42 +140,52 @@
                         </div>
                         <br><br><br>
 
+                        <table class="table table-striped" id="studenttable">
+                            <thead>
+                                <tr>
+                                    <th>Lab Activity</th>
+                                    <th>Score</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
                         {% for labactivity in labactivities %}
+                            <script>
+                                var temp = 0;
+                            </script>
+                            {% for labprodstatus in labprocedurestatus %}
+                                {% if labprodstatus.labid == labactivity and labprodstatus.groupid == studentgroup %}
                                     <script>
-                                            var temp = 0;
+                                        temp++;
                                     </script>
-                                    {% for labprodstatus in labprocedurestatus %}
-                                        {% if labprodstatus.labid == labactivity and labprodstatus.groupid == studentgroup %}
-                                                <script>
-                                                        temp++
-                                                </script>
-                                        {% endif %}
-                                    {% endfor %}
-                        <script>
-                                if(temp > 0){
-                                    document.write("<div>");
-                                }else{
-                                    document.write("<div style='display:none'>");
+                                {% endif %}
+                            {% endfor %}
+                            <script>
+                                if(temp > 0) {
+                                    document.write("<tr>");
                                 }
-                        </script>
-                        <a href='{% url 'group_labactivity' %}'>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-
-                                    {{ labactivity.labname }}
-
-                                </div>
-                                <div class="panel-body">
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
-                                            <span class="sr-only">100% Complete (success)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        </div>
+                                else {
+                                    document.write("<tr style='display:none'>");
+                                }
+                            </script>
+                                <td>{{ labactivity.labname }}</td>
+                                
+                                <script>
+                                    var grade = 0;
+                                </script>
+                                
+                                {% for groupgrade in groupgrades %}
+                                    {% if groupgrade.groupid == studentgroup and groupgrade.labid == labactivity %}
+                                        <script>
+                                            grade = grade + {{ groupgrade.grade }};
+                                        </script>
+                                    {% endif %}
+                                {% endfor %}
+                                <td><script> document.write(grade) </script></td>
+                            </tr>
                         {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -201,6 +211,22 @@
     <script src="{% static 'js/bootstrap.js' %}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#datatable').DataTable({
+                "bInfo": false,
+                /*"bPaginate": false,*/
+
+                aLengthMenu: [
+                    [50, 100, -1],
+                    [50, 100, "All"]
+                ]
+            });
+        });
+    </script>
 
     <!-- Include SmartWizard JavaScript source -->
 </body>
