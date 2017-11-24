@@ -75,6 +75,7 @@ class LabProcedure(models.Model):
 	sensorid = models.ForeignKey(Sensors, models.DO_NOTHING, blank=True, null=True)
 	stepnum = models.IntegerField()
 	procedurename = models.CharField(max_length=100, null=False)
+	item = models.CharField(max_length=200, null=True)
 	proceduredesc = models.TextField()
 	minvalue = models.IntegerField(blank=True, null=True)
 	maxvalue = models.IntegerField(blank=True, null=True)
