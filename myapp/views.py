@@ -118,11 +118,11 @@ def start(request):
 	labprocedures = LabProcedure.objects.filter(labid=labid)
 	labactivities = LabActivity.objects.filter(pk=labid)
 
-	initiallabproceddure = 0
+	initiallabprocedure = 0
 	ctr = 0
 	for labprocedure in labprocedures:
 		if(ctr == 0):
-			initiallabproceddure = labprocedure.procedureid
+			initiallabprocedure = labprocedure.procedureid
 		ctr = ctr + 1
 
 	return render(request, "student_labactivity_start.html", locals())
@@ -143,10 +143,6 @@ def group(request):
 	groups = Group.objects.all()
 	students = Student.objects.all()
 	profiles = Profile.objects.all()
-	labactivities = LabActivity.objects.all()
-	labprocedures = LabProcedure.objects.all()
-	labprocedurestatus = GroupGrade.objects.all()
-	groupgrades = GroupGrade.objects.all()
 	
 	# progress = {'group1':10}
 	return render(request, "teacher_group.html", locals())
@@ -375,5 +371,32 @@ def progress(request):
 	return render(request, "teacher_progress.html", locals())
 
 def grade(request):
-	
+	studentgroups = StudentGroup.objects.filter(facultyid=request.user.profile.facultyid)
+	profiles = Profile.objects.all()
+	labactivities = LabActivity.objects.all()
+	groupgrades = GroupGrade.objects.all()
+
 	return render(request, "teacher_grade.html", locals())
+
+def grade_lab(request):
+	labid = request.GET.get('labid')
+	groupid = request.GET.get('groupid')
+
+	labactivity = LabActivity.objects.get(labid=labid)
+	studentgroup = StudentGroup.objects.get(groupid=groupid)
+
+	labprocedures = LabProcedure.objects.filter(labid=labactivity)
+	groupgrades = GroupGrade.objects.filter(labid=labactivity, groupid=studentgroup)
+
+	newprocedures = LabProcedure.objects.filter(labid=labactivity, maxvalue=100)
+	print(newprocedures)
+
+	if request.method == "POST":
+		for newprocedure in newprocedures:
+			sample = str(newprocedure.procedureid)
+			grade = GroupGrade.objects.get(groupid=studentgroup, labid=labactivity, procedureid=newprocedure)
+			grade.grade = request.POST[sample]
+			grade.save()
+		return redirect('grade')
+
+	return render(request, "teacher_grade_labactivity.html", locals())

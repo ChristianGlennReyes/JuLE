@@ -86,9 +86,9 @@
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'home' %}">Lab Activities</a></li>
                             <li><a href="{% url 'progress' %}" class="menu-top-active">Progress Tracker</a></li>
+                            <li><a href="{% url 'grade' %}">Score</a></li>
                             <li><a href="{% url 'group' %}">Groups</a></li>
                             <li><a href="{% url 'student' %}">Students</a></li>
-                            <li><a href="{% url 'grade' %}">Grade</a></li>
                         </ul>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
 
             {% if isTrue == True %}
                 {% for studentgroup in studentgroups %}
-                <div class="row">
+                <div class="">
                     {% for profile in profiles %}
                         {% if profile.groupid == studentgroup %}
                             {% if profile.loggedin %}
@@ -156,7 +156,6 @@
                                 </div>
                                 <script>
                                     document.getElementById({{ studentgroup.groupid }}).style.width = percentage + "%";
-                                    console.log(percentage)
                                 </script>
                             </div>
                         </div>

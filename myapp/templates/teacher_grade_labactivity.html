@@ -12,12 +12,12 @@
         <![endif]-->
     <title>JuLE</title>
     <!-- BOOTSTRAP CORE STYLE  -->
-    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
+    <link href="{% static '/css/bootstrap.css' %}" rel="stylesheet" />
     <!-- FONT AWESOME ICONS  -->
-    <link href="{% static 'css/font-awesome.css' %}" rel="stylesheet" />
+    <link href="{% static '/css/font-awesome.css' %}" rel="stylesheet" />
     <!-- CUSTOM STYLE  -->
-    <link href="{% static 'css/style.css' %}" rel="stylesheet" />
-    <link href="{% static 'css/mystyle.css' %}" rel="stylesheet" />
+    <link href="{% static '/css/style.css' %}" rel="stylesheet" />
+    <link href="{% static '/css/mystyle.css' %}" rel="stylesheet" />
      <!-- HTML5 Shiv and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -25,11 +25,12 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
-    <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />    
+    <link href="{% static '/css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
+    
     <!-- Optional SmartWizard theme -->
-    <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'css/smart_wizard_theme_arrows.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'css/smart_wizard_theme_dots.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static '/css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static '/css/smart_wizard_theme_arrows.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static '/css/smart_wizard_theme_dots.css' %}" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div class="navbar navbar-inverse set-radius-zero">
@@ -42,7 +43,7 @@
                 </button>
                 <a class="navbar-brand" href="{% url 'home' %}">
 
-                    <img src="{% static 'img/logo1.png' %}" />
+                    <img src="{% static '/img/logo1.png' %}" />
                 </a>
 
             </div>
@@ -58,7 +59,7 @@
                             <div class="dropdown-menu dropdown-settings">
                                 <div class="media">
                                     <a class="media-left" href="#">
-                                        <img src="{% static 'img/64-64.jpg' %}" alt="" class="img-rounded" />
+                                        <img src="{% static '/img/64-64.jpg' %}" alt="" class="img-rounded" />
                                     </a>
                                     <div class="media-body">
                                         <h4 class="media-heading">{{ user.profile.facultyid.facultyname }}</h4>
@@ -85,7 +86,7 @@
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'home' %}">Lab Activities</a></li>
                             <li><a href="{% url 'progress' %}">Progress Tracker</a></li>
-                            <li><a href="{% url 'grade' %}" class="menu-top-active">Score</a></li>
+                            <li><a class="menu-top-active" href="{% url 'grade' %}">Score</a></li>
                             <li><a href="{% url 'group' %}">Groups</a></li>
                             <li><a href="{% url 'student' %}">Students</a></li>
                         </ul>
@@ -100,74 +101,66 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="page-head-line">Score</h4>
+                    <h4 class="page-head-line">{{ studentgroup.groupname }} : {{ labactivity.labname }}</h4>
                 </div>
             </div>
 
-            {% for studentgroup in studentgroups %}
-                {% for profile in profiles %}
-                    {% if studentgroup == profile.groupid %}
-                        {% if profile.loggedin %}
-                            <div class="panel panel-success">
-                        {% else %}
-                            <div class="panel panel-default">
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        {{ studentgroup.groupname }}
-                    </h4>
-                </div>
-                <div class="panel-body">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Lab Activity</th>
-                                <th>Score</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                    {% for labactivity in labactivities %}
-                        <script>
-                            var temp = 0;
-                        </script>
-                        {% for groupgrade in groupgrades %}
-                            {% if groupgrade.labid == labactivity and groupgrade.groupid == studentgroup %}
-                                <script>
-                                    temp++;
-                                </script>
-                            {% endif %}
-                        {% endfor %}
-                        <script>
-                            if(temp > 0) {
-                                document.write("<tr>");
-                            }
-                            else {
-                                document.write("<tr style='display:none'>");
-                            }
-                        </script>
-                            <td><a href="{% url 'grade_lab' %}?labid={{ labactivity.labid }}&groupid={{ studentgroup.groupid }}">{{ labactivity.labname }}</a></td>
-                            <script>
-                                var grade = 0;
-                            </script>
-                            
-                            {% for groupgrade in groupgrades %}
-                                {% if groupgrade.groupid == studentgroup and groupgrade.labid == labactivity %}
-                                    <script>
-                                        grade = grade + {{ groupgrade.grade }};
-                                    </script>
+            <div>
+                <form method="POST">
+                {% for labprocedure in labprocedures %}
+                <div id="step-{{ labprocedure.stepnum }}" class="">
+                    <h3>Step {{labprocedure.stepnum}}: {{ labprocedure.procedurename }}</h3>
+                    {{ labprocedure.proceduredesc }}
+                    {% for groupgrade in groupgrades%}
+                        {% if groupgrade.procedureid == labprocedure %}
+                            {% if labprocedure.maxvalue > 0 %}
+                                <h4 style="color: #C36464">Answer: {{ groupgrade.value }}</h4>
+                                {% if labprocedure.maxvalue == 100 %}
+                                    <h4 style="color: #C36464">Score:
+                                    <select name="{{ labprocedure.procedureid }}">
+                                        {% if groupgrade.grade == 0 %}
+                                            <option selected="selected" value="0">0</option>
+                                        {% else %}
+                                            <option value="0">0</option>
+                                        {% endif %}
+                                        {% if groupgrade.grade == 1 %}
+                                            <option selected="selected" value="1">1</option>
+                                        {% else %}
+                                            <option value="1">1</option>
+                                        {% endif %}
+                                        {% if groupgrade.grade == 2 %}
+                                            <option selected="selected" value="2">2</option>
+                                        {% else %}
+                                            <option value="2">2</option>
+                                        {% endif %}
+                                        {% if groupgrade.grade == 3 %}
+                                            <option selected="selected" value="3">3</option>
+                                        {% else %}
+                                            <option value="3">3</option>
+                                        {% endif %}
+                                        {% if groupgrade.grade == 4 %}
+                                            <option selected="selected" value="4">4</option>
+                                        {% else %}
+                                            <option value="4">4</option>
+                                        {% endif %}
+                                        {% if groupgrade.grade == 5 %}
+                                            <option selected="selected" value="5">5</option>
+                                        {% else %}
+                                            <option value="5">5</option>
+                                        {% endif %}
+                                    </select>
+                                </h4>
                                 {% endif %}
-                            {% endfor %}
-                            <td><script> document.write(grade) </script></td>
-                        </tr>
+                            {% endif %}
+                        {% endif %}
                     {% endfor %}
-                        </tbody>
-                    </table>
                 </div>
+                {% endfor %}
+                <br>
+                    <button type="submit" class="btn btn-info" name="save" value="save">Save</button>
+                    {% csrf_token %}
+                </form>
             </div>
-            {% endfor %}
         </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->
@@ -184,9 +177,9 @@
     <!-- FOOTER SECTION END-->
     <!-- JAVASCRIPT AT THE BOTTOM TO REDUCE THE LOADING TIME  -->
     <!-- CORE JQUERY SCRIPTS -->
-    <script src="{% static 'js/jquery-1.11.1.js' %}"></script>
+    <script src="{% static '/js/jquery-1.11.1.js' %}"></script>
     <!-- BOOTSTRAP SCRIPTS  -->
-    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static '/js/bootstrap.js' %}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 

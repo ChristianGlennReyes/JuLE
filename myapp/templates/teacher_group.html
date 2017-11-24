@@ -26,7 +26,6 @@
     <![endif]-->
 
     <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
     
     <!-- Optional SmartWizard theme -->
     <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
@@ -87,9 +86,9 @@
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'home' %}">Lab Activities</a></li>
                             <li><a href="{% url 'progress' %}">Progress Tracker</a></li>
+                            <li><a href="{% url 'grade' %}">Score</a></li>
                             <li><a class="menu-top-active" href="{% url 'group' %}">Groups</a></li>
                             <li><a href="{% url 'student' %}">Students</a></li>
-                            <li><a href="{% url 'grade' %}">Grade</a></li>
                         </ul>
                     </div>
                 </div>
@@ -118,75 +117,20 @@
                 {% endfor %}
                 <div class="panel-heading">
                     <h4 class="panel-title">
-                        <div class="col-md-11" style="padding-left: 0px; padding-right: 0px">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#{{ studentgroup.groupid }}" class="collapsed">{{ studentgroup.groupname }}</a>    
-                        </div>
-                        <div align="right">
-                            <a href="{% url 'editgroup' %}?id={{ studentgroup.groupid }}" class="btn btn-danger btn-xs" align="right" style="color:#fff">Edit</a>
-                        </div>
+                        <a href="{% url 'editgroup' %}?id={{ studentgroup.groupid }}">{{ studentgroup.groupname }}</a>
                     </h4>
                 </div>
-                <div id="{{ studentgroup.groupid }}" class="panel-collapse collapse" style="height: 0px;">
-                    <div class="panel-body">
-                        <div class="col-md-12">
-                        {% for group in groups %}
-                            {% for student in students %}
-                                {% if studentgroup == group.groupid and student == group.studentid%}
-                                <div class="col-md-3">
-                                    {{ student.studentname }}
-                                </div>
-                                {% endif %}    
-                            {% endfor %}
+                <div class="panel-body">
+                    <div class="col-md-12">
+                    {% for group in groups %}
+                        {% for student in students %}
+                            {% if studentgroup == group.groupid and student == group.studentid%}
+                            <div class="col-md-3">
+                                {{ student.studentname }}
+                            </div>
+                            {% endif %}    
                         {% endfor %}
-                        </div>
-                        <br><br><br>
-
-                        <table class="table table-striped" id="studenttable">
-                            <thead>
-                                <tr>
-                                    <th>Lab Activity</th>
-                                    <th>Score</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                        {% for labactivity in labactivities %}
-                            <script>
-                                var temp = 0;
-                            </script>
-                            {% for labprodstatus in labprocedurestatus %}
-                                {% if labprodstatus.labid == labactivity and labprodstatus.groupid == studentgroup %}
-                                    <script>
-                                        temp++;
-                                    </script>
-                                {% endif %}
-                            {% endfor %}
-                            <script>
-                                if(temp > 0) {
-                                    document.write("<tr>");
-                                }
-                                else {
-                                    document.write("<tr style='display:none'>");
-                                }
-                            </script>
-                                <td>{{ labactivity.labname }}</td>
-                                
-                                <script>
-                                    var grade = 0;
-                                </script>
-                                
-                                {% for groupgrade in groupgrades %}
-                                    {% if groupgrade.groupid == studentgroup and groupgrade.labid == labactivity %}
-                                        <script>
-                                            grade = grade + {{ groupgrade.grade }};
-                                        </script>
-                                    {% endif %}
-                                {% endfor %}
-                                <td><script> document.write(grade) </script></td>
-                            </tr>
-                        {% endfor %}
-                            </tbody>
-                        </table>
+                    {% endfor %}
                     </div>
                 </div>
             </div>
@@ -212,22 +156,6 @@
     <script src="{% static 'js/bootstrap.js' %}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-
-    <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function(){
-            $('#datatable').DataTable({
-                "bInfo": false,
-                /*"bPaginate": false,*/
-
-                aLengthMenu: [
-                    [50, 100, -1],
-                    [50, 100, "All"]
-                ]
-            });
-        });
-    </script>
 
     <!-- Include SmartWizard JavaScript source -->
 </body>

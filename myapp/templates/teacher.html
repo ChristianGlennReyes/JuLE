@@ -86,9 +86,9 @@
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
                             <li><a class="menu-top-active" href="{% url 'home' %}">Lab Activities</a></li>
                             <li><a href="{% url 'progress' %}">Progress Tracker</a></li>
+                            <li><a href="{% url 'grade' %}">Score</a></li>
                             <li><a href="{% url 'group' %}">Groups</a></li>
                             <li><a href="{% url 'student' %}">Students</a></li>
-                            <li><a href="{% url 'grade' %}">Grade</a></li>
                         </ul>
                     </div>
                 </div>
@@ -126,16 +126,16 @@
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
                                     {% if labactivity.selected == False %}
-                                    <li><a href="/home/?func=0&id={{ labactivity.labid }}">Select</a></li>
+                                    <li><a href="{% url 'home' %}?func=0&id={{ labactivity.labid }}">Select</a></li>
                                     {% else %}
-                                    <li><a href="/home/?func=1&id={{ labactivity.labid }}">Deselect</a></li>
+                                    <li><a href="{% url 'home' %}?func=1&id={{ labactivity.labid }}">Deselect</a></li>
                                     {% endif %}
                                     {% if labactivity.hidden == False %}
-                                    <li><a href="/home/?func=2&id={{ labactivity.labid }}">Hide</a></li>
+                                    <li><a href="{% url 'home' %}?func=2&id={{ labactivity.labid }}">Hide</a></li>
                                     {% else %}
-                                    <li><a href="/home/?func=3&id={{ labactivity.labid }}">Unhide</a></li>
+                                    <li><a href="{% url 'home' %}?func=3&id={{ labactivity.labid }}">Unhide</a></li>
                                     {% endif %}
-                                    <li><a href="/home/labactivity/?id={{ labactivity.labid }}">View</a></li>
+                                    <li><a href="{% url 'home' %}labactivity/?id={{ labactivity.labid }}">View</a></li>
                               </ul>
                             </div>
                         </div>

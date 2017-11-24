@@ -127,6 +127,10 @@
 
         <br />
         <!-- SmartWizard html -->
+
+        <script type="text/javascript">
+            var ctr = {{ initiallabprocedure }};
+        </script>
         <div id="smartwizard">
             <ul>
                 {% for labprocedure in labprocedures %}
@@ -218,12 +222,25 @@
                                          
             
             // External Button Events
-            $("#reset-btn").on("click", function() {
+            $(".sw-btn-prev").on("click", function() {
+                ctr--;
+            })
+
+            $(".sw-btn-next").on("click", function() {
+                ctr++;
+                console.log(ctr);
+            })
+
+            $(".btn-info").on("click", function() {
+                console.log(ctr);
+            })
+
+            /*$("#reset-btn").on("click", function() {
                 // Reset wizard
                 $('#smartwizard').smartWizard("reset");
                 return true;
             });
-            
+
             $("#prev-btn").on("click", function() {
                 // Navigate previous
                 $('#smartwizard').smartWizard("prev");
@@ -234,7 +251,7 @@
                 // Navigate next
                 $('#smartwizard').smartWizard("next");
                 return true;
-            });
+            });*/
             
             /*$("#theme_selector").on("change", function() {
                 // Change theme
@@ -252,15 +269,15 @@
         });   
     </script>  
 
+    {% for labprocedure in labprocedures %}
     <script type="text/javascript">
         $(function () {
-            {% for labprocedure in labprocedures %}
             $('#container{{ labprocedure.stepnum }}').highcharts({
                 chart: {
                     type: 'bar'
                 },
                 title: {
-                    text: 'Historic World Population by Region'
+                    text: 'Historic World Population by Region {{ labprocedure.stepnum }}'
                 },
                 subtitle: {
                     text: 'Source: <a href="https://en.wikipedia.org/wiki/World_population">Wikipedia.org</a>'
@@ -316,9 +333,9 @@
                     data: [1052, 954, 4250, 740, 38]
                 }]
             });
-            {% endfor %}
         });
     </script>
+    {% endfor %}
 
     <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
     <script src="https://code.highcharts.com/highcharts.js"></script>

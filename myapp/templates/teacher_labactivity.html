@@ -86,9 +86,9 @@
                         <ul id="menu-top" class="nav navbar-nav navbar-right">
                             <li><a class="menu-top-active" href="{% url 'home' %}">Lab Activities</a></li>
                             <li><a href="{% url 'progress' %}">Progress Tracker</a></li>
+                            <li><a href="{% url 'grade' %}">Score</a></li>
                             <li><a href="{% url 'group' %}">Groups</a></li>
                             <li><a href="{% url 'student' %}">Students</a></li>
-                            <li><a href="{% url 'grade' %}">Grade</a></li>
                         </ul>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
             <div>
                 {% for labprocedure in labprocedures %}
                 <div id="step-{{ labprocedure.stepnum }}" class="">
-                    <h2>Step {{labprocedure.stepnum}}: {{ labprocedure.procedurename }}</h2>
+                    <h3>Step {{labprocedure.stepnum}}: {{ labprocedure.procedurename }}</h3>
                     {{ labprocedure.proceduredesc }}
                 </div>
                 {% endfor %}
