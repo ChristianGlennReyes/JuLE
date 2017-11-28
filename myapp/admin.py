@@ -10,6 +10,7 @@ admin.site.register(models.Sensors)
 admin.site.register(models.LabActivity)
 admin.site.register(models.LabProcedure)
 admin.site.register(models.GroupGrade)
+admin.site.register(models.Notification)
 
 # admin.site.register(models.DataValue)
 # admin.site.register(models.LabProcedureStatus)

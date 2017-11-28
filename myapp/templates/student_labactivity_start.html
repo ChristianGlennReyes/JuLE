@@ -25,7 +25,7 @@
     <![endif]-->
 
     <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
-    
+
     <!-- Optional SmartWizard theme -->
     <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'css/smart_wizard_theme_arrows.css' %}" rel="stylesheet" type="text/css" />
@@ -115,8 +115,8 @@
                     <option value="circles">circles</option>
                     <option value="dots"><data></data>ots</option>
               </select>
-            </div>           
-            
+            </div>
+
             <label>External Buttons:</label>
             <div class="btn-group navbar-btn" role="group">
                 <button class="btn btn-default" id="prev-btn" type="button">Go Previous</button>
@@ -126,18 +126,18 @@
         </form> -->
 
         <br />
-        <!-- SmartWizard html -->
-
-        <script type="text/javascript">
-            var ctr = {{ initiallabprocedure }};
+        <script>
+        var ctr = {{ initiallabprocedure }};
         </script>
+        
+        <!-- SmartWizard html -->
         <div id="smartwizard">
             <ul>
                 {% for labprocedure in labprocedures %}
                 <li><a href="#step-{{ labprocedure.stepnum }}">Step {{ labprocedure.stepnum }}<br/><small>{{ labprocedure.procedurename }}</small></a></li>
                 {% endfor %}
             </ul>
-            
+
             <div>
                 {% for labprocedure in labprocedures %}
                 <div id="step-{{ labprocedure.stepnum }}" class="">
@@ -147,7 +147,7 @@
 
                     {% if labprocedure.sensorid %}
                         {% if labprocedure.maxvalue %}
-                        <div id="container{{ labprocedure.stepnum }}" style="padding-top: 20pt;"></div>
+                        <div id="container{{ labprocedure.stepnum }}" style="padding-top: 20pt;" align="center"><button id="graphbtn{{ labprocedure.stepnum }}">Gather Data</button></div>
                         {% endif %}
                     {% else %}
                         {% if labprocedure.maxvalue %}
@@ -158,7 +158,7 @@
                 {% endfor %}
             </div>
         </div>
-            
+
         </div>
     </div>
     <!-- CONTENT-WRAPPER SECTION END-->
@@ -185,11 +185,13 @@
     <script type="text/javascript" src="{% static 'js/jquery.smartWizard.min.js' %}"></script>
 
     <script type="text/javascript">
+        var step = 0;
         $(document).ready(function(){
-            
-            // Step show event 
+    
+            // Step show event
             $("#smartwizard").on("showStep", function(e, anchorObject, stepNumber, stepDirection, stepPosition) {
-               //alert("You are on step "+stepNumber+" now");
+                step = stepNumber;
+               // alert("You are on step "+stepNumber+" now");
                if(stepPosition === 'first'){
                    $("#prev-btn").addClass('disabled');
                }else if(stepPosition === 'final'){
@@ -200,18 +202,20 @@
                }
             });
             
+            
+
             // Toolbar extra buttons
             var btnFinish = $('<button></button>').text('Finish')
                                              .addClass('btn btn-info')
                                              .on('click', function(){ alert('Finish Clicked'); });
             var btnCancel = $('<button></button>').text('Cancel')
                                              .addClass('btn btn-danger')
-                                             .on('click', function(){ $('#smartwizard').smartWizard("reset"); });                      
-            
-            
+                                             .on('click', function(){ $('#smartwizard').smartWizard("reset"); });
+
+
             // Smart Wizard
-            $('#smartwizard').smartWizard({ 
-                    selected: 0, 
+            $('#smartwizard').smartWizard({
+                    selected: 0,
                     theme: 'default',
                     transitionEffect:'fade',
                     showStepURLhash: true,
@@ -219,23 +223,37 @@
                                       toolbarExtraButtons: [btnFinish, btnCancel]
                                     }
             });
-                                         
-            
+
+
             // External Button Events
+            
             $(".sw-btn-prev").on("click", function() {
                 ctr--;
-            })
-
+                console.log(ctr)
+            });
+            
             $(".sw-btn-next").on("click", function() {
-                ctr++;
+                ctr =  {{ initiallabprocedure }} + step;
                 console.log(ctr);
-            })
-
-            $(".btn-info").on("click", function() {
-                console.log(ctr);
-            })
-
-            /*$("#reset-btn").on("click", function() {
+                
+                $.ajax({
+                    url: '/changeStepStatus/',
+                    type: 'POST',
+                    data: {
+                    {% for labactivity in labactivities%}
+                        'labid': "{{ labactivity.labid }}",
+                    {% endfor %}
+                        'groupid': "{{user.profile.groupid.groupid}}",
+                        'procid': ctr
+                    },
+                      dataType: "json",
+                      success:  function(data){
+                         console.log("success!")
+                    }
+                });
+            });
+            
+            $("#reset-btn").on("click", function() {
                 // Reset wizard
                 $('#smartwizard').smartWizard("reset");
                 return true;
@@ -246,13 +264,13 @@
                 $('#smartwizard').smartWizard("prev");
                 return true;
             });
-            
+
             $("#next-btn").on("click", function() {
                 // Navigate next
                 $('#smartwizard').smartWizard("next");
                 return true;
-            });*/
-            
+            });
+
             /*$("#theme_selector").on("change", function() {
                 // Change theme
                 $('#smartwizard').smartWizard("theme", $(this).val());
@@ -263,82 +281,141 @@
             /*$('#smartwizard').smartWizard("theme", "arrows");*/
             /*$('#smartwizard').smartWizard("theme", "circles");*/
             /*$('#smartwizard').smartWizard("theme", "dots");*/
-            
+
             // Set selected theme on page refresh
             $("#theme_selector").change();
-        });   
-    </script>  
-
-    {% for labprocedure in labprocedures %}
-    <script type="text/javascript">
-        $(function () {
-            $('#container{{ labprocedure.stepnum }}').highcharts({
-                chart: {
-                    type: 'bar'
-                },
-                title: {
-                    text: 'Historic World Population by Region {{ labprocedure.stepnum }}'
-                },
-                subtitle: {
-                    text: 'Source: <a href="https://en.wikipedia.org/wiki/World_population">Wikipedia.org</a>'
-                },
-                xAxis: {
-                    categories: ['Africa', 'America', 'Asia', 'Europe', 'Oceania'],
-                    title: {
-                        text: null
-                    }
-                },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: 'Population (millions)',
-                        align: 'high'
-                    },
-                    labels: {
-                        overflow: 'justify'
-                    }
-                },
-                tooltip: {
-                    valueSuffix: ' millions'
-                },
-                plotOptions: {
-                    bar: {
-                        dataLabels: {
-                            enabled: true
-                        }
-                    }
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: -40,
-                    y: 80,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
-                    shadow: true
-                },
-                credits: {
-                    enabled: false
-                },
-                series: [{
-                    name: 'Year 1800',
-                    data: [107, 31, 635, 203, 2]
-                }, {
-                    name: 'Year 1900',
-                    data: [133, 156, 947, 408, 6]
-                }, {
-                    name: 'Year 2012',
-                    data: [1052, 954, 4250, 740, 38]
-                }]
-            });
         });
     </script>
-    {% endfor %}
+    {% for labprocedure in labprocedures %}
+    <script type="text/javascript">
+    var ardChart = document.getElementById("graphbtn{{ labprocedure.stepnum }}");
 
+    ardChart.addEventListener("click", function(){
+        var storeDB = [];
+        $(function () {
+            $('#container{{ labprocedure.stepnum }}').highcharts({
+              chart: {
+                type: 'spline',
+                animation: Highcharts.svg, // don't animate in old IE
+                marginRight: 10,
+                events: {
+                load: function () {
+                // set up the updating of the chart each second
+                var series = this.series[0];
+                var ajaxer = setInterval(function () {
+                    //ajax stuff
+                    var cnt = 0;
+                    var x;
+                    var y;
+                    $.ajax({
+                      url: "/getArdData/",
+                      type: 'GET',
+                      dataType: "json",
+                      success:  function(data){
+                        series.addPoint([x, parseFloat(JSON.stringify(data.ardData).replace(/\"/g, ""))], true, true);
+                        storeDB.push(parseFloat(JSON.stringify(data.ardData).replace(/\"/g, "")));
+                      }
+                          });
+
+                 }, 1000);
+
+                    console.log(storeDB);
+
+                 setTimeout(function() {
+                    clearInterval(ajaxer);
+                    var total = 0;
+                    for(var i=0; i<storeDB.length; i++){
+                        total += storeDB[i];
+                    }
+                    avg = total/storeDB.length
+                    console.log(avg);
+                    console.log(storeDB.toString());
+                    $.ajax({
+                        {% for labactivity in labactivities%}
+                      url: "/saveData/?id={{ labactivity.labid }}",
+                        {% endfor %}
+                      type: 'POST',
+                      data: {
+                        'sData': storeDB.toString(),
+                        'dataAvg' : avg,
+                        'groupid': "{{user.profile.groupid.groupid}}",
+                        'procid': ctr
+                      },
+                      dataType: "json",
+                      success:  function(data){
+                        console.log(avg)
+                      }
+                          });
+                  }, 11000);
+
+                            }
+                        }
+                    },
+                    title: {
+                        text: 'Graph'
+                    },
+                    xAxis: {
+                        type: '',
+                        tickPixelInterval: 150
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Value'
+                        },
+                        plotLines: [{
+                            value: 0,
+                            width: 1,
+                            color: '#808080'
+                        }]
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    exporting: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'Random data',
+                        data: (function () {
+                            // generate an array of random data
+                            var data = [],
+                                time = (new Date()).getTime(),
+                                i;
+
+                            for (i = -10; i <= 0; i += 1) {
+                                data.push({
+                                    y: 0
+                                });
+                            }
+                            return data;
+                            }())
+                          }]
+                        });
+                        });
+                    });
+    </script>
+   {% endfor %}
     <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+    <script>
+        $.ajax({
+                    url: '/changeStepStatus/',
+                    type: 'POST',
+                    data: {
+                    {% for labactivity in labactivities%}
+                        'labid': "{{ labactivity.labid }}",
+                    {% endfor %}
+                        'groupid': "{{user.profile.groupid.groupid}}",
+                        'procid': ctr
+                    },
+                      dataType: "json",
+                      success:  function(data){
+                         console.log("success!")
+                    }
+                });
+    </script>
+    
 </body>
 </html>

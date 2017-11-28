@@ -6,6 +6,48 @@ from myapp.models import Student, Group, GroupGrade, LabActivity, LabProcedure, 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+import json
+from threading import Thread
+
+ardData = "0"
+JSONer = {}
+
+@csrf_exempt
+def changeStepStatus(request):
+	if request.method=="POST":
+		procid = LabProcedure.objects.get(procedureid=request.POST.get("procid"))
+		groupid = StudentGroup.objects.get(groupid=request.POST.get("groupid"))
+		labid = LabActivity.objects.get(labid=request.POST.get("labid"))
+		
+		grade = GroupGrade.objects.get(groupid = groupid, labid = labid, procedureid = procid)
+		grade.status = True
+		grade.save()
+
+@csrf_exempt
+def saveData(request):
+	if request.method=="POST":
+		value = request.POST.get("sData")
+		procid = LabProcedure.objects.get(procedureid=request.POST.get("procid"))
+		groupid = StudentGroup.objects.get(groupid=request.POST.get("groupid"))
+		labid = LabActivity.objects.get(labid=request.GET.get("id"))
+		dataAvg = request.POST.get("dataAvg")
+		grade = GroupGrade.objects.get(groupid = groupid, labid = labid, procedureid = procid)
+		grade.average = dataAvg
+		grade.value = value
+		grade.save()
+	
+	return HttpResponse("/")
+
+@csrf_exempt
+def getArdData(request):
+	if request.method=='POST':
+		ardData = request.POST.get('ardData')
+		JSONer['ardData'] = str(ardData)
+	return HttpResponse(json.dumps(JSONer))
+
+runthread = Thread(target=getArdData)
+runthread.start()
 
 # Create your views here.
 def home(request):
@@ -49,28 +91,45 @@ def home(request):
 					labactivity.hidden = False
 					labactivity.save()
 
-				return redirect('home')
+				# return redirect('home')
 
 		uType = request.user.profile.userType
-		context = {
-			'labactivities': LabActivity.objects.all()
-		}
-		if(uType == False):
-			# return render(request, "student.html", {})
-			template = loader.get_template('student.html')
-		else:
-			# print(request.user.profile.facultyid.facultyname)
-			# return render(request, "teacher.html", {})
-			template = loader.get_template('teacher.html')
+		labactivities = LabActivity.objects.all()
 
 		myprofile = Profile.objects.get(user=request.user)
 		myprofile.loggedin = True
 		myprofile.save()
 
+		lab = LabActivity.objects.filter(labid=request.GET.get('id'))
+
+		if(uType == False):
+			# return render(request, "student.html", {})
+			# template = loader.get_template('student.html')
+			return render(request, "student.html", locals())
+		else:
+			# print(request.user.profile.facultyid.facultyname)
+			# return render(request, "teacher.html", {})
+			# template = loader.get_template('teacher.html')
+			ptrue = request.GET.get('notif')
+			print(ptrue)
+			if ptrue == '0':
+				for selected in lab:
+					ptext = "Selected " + str(selected.labname) + " Lab Activity"
+			elif ptrue == '1':
+				for selected in lab:
+					ptext = "Unselected " + str(selected.labname) + " Lab Activity"
+			elif ptrue == '2':
+				for selected in lab:
+					ptext = "Hide " + str(selected.labname) + " Lab Activity"
+			elif ptrue == '3':
+				for selected in lab:
+					ptext = "Unhide " + str(selected.labname) + " Lab Activity"
+			return render(request, "teacher.html", locals())
+
 		# stud = Student(studentname='Practice Lang')
 		# stud.save()
 
-		return HttpResponse(template.render(context, request))
+		# return HttpResponse(template.render(context, request))
 
 def logout(request):
 	myprofile = Profile.objects.get(user=request.user)

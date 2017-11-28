@@ -27,6 +27,8 @@
 
     <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />    
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css">
+    
+    <link href="{% static 'css/pnotify.custom.min.css' %}" media="all" rel="stylesheet" type="text/css" />
 
     <!-- Optional SmartWizard theme -->
     <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
@@ -194,13 +196,15 @@
 
     <script src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 
+    <script type="text/javascript" src="{% static 'js/pnotify.custom.min.js' %}"></script>
+
     {% for studentgroup in studentgroups %}
     <script type="text/javascript">
         $(document).ready(function(){
             $('#datatable{{ studentgroup.groupid }}').DataTable({
                 "bInfo": false,
                 "bPaginate": false,
-                "search": false,
+                "searching": false,
 
                 "columns": [
                     null,
@@ -210,6 +214,17 @@
         });
     </script>
     {% endfor %}
+
+    <script type="text/javascript">
+        $(function(){
+            new PNotify({
+                title: 'Success!',
+                text: 'Yes',
+                type: 'success',
+                animate_speed: 'fast'
+            });
+        });
+    </script>
 
     <!-- Include SmartWizard JavaScript source -->
 </body>

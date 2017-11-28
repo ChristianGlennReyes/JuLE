@@ -6,6 +6,9 @@ from django.conf import settings
 from .forms import LoginForm
 
 urlpatterns = [
+    url(r'^getArdData/$', views.getArdData, name='getArdData'),
+    url(r'^saveData/$', views.saveData, name='sensData'),
+    url(r'^changeStepStatus/$', views.changeStepStatus, name='changeStepStatus'),
     url(r'^$', AuthViews.login, {'template_name': 'login.html', 'authentication_form': LoginForm}, name='login'),
     # url(r'^logout/$', logout, {'next_page': '/'}, name='logout'),
     url(r'^logout/$', views.logout, name='logout'),

@@ -26,6 +26,7 @@
     <![endif]-->
 
     <link href="{% static 'css/smart_wizard.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/pnotify.custom.min.css' %}" media="all" rel="stylesheet" type="text/css" />
     
     <!-- Optional SmartWizard theme -->
     <link href="{% static 'css/smart_wizard_theme_circles.css' %}" rel="stylesheet" type="text/css" />
@@ -126,14 +127,14 @@
                                 <button data-toggle="dropdown" class="btn btn-default dropdown-toggle borderless">Action <span class="caret"></span></button>
                                 <ul class="dropdown-menu">
                                     {% if labactivity.selected == False %}
-                                    <li><a href="{% url 'home' %}?func=0&id={{ labactivity.labid }}">Select</a></li>
+                                    <li><a href="{% url 'home' %}?func=0&id={{ labactivity.labid }}&notif=0">Select</a></li>
                                     {% else %}
-                                    <li><a href="{% url 'home' %}?func=1&id={{ labactivity.labid }}">Deselect</a></li>
+                                    <li><a href="{% url 'home' %}?func=1&id={{ labactivity.labid }}&notif=1">Deselect</a></li>
                                     {% endif %}
                                     {% if labactivity.hidden == False %}
-                                    <li><a href="{% url 'home' %}?func=2&id={{ labactivity.labid }}">Hide</a></li>
+                                    <li><a href="{% url 'home' %}?func=2&id={{ labactivity.labid }}&notif=2">Hide</a></li>
                                     {% else %}
-                                    <li><a href="{% url 'home' %}?func=3&id={{ labactivity.labid }}">Unhide</a></li>
+                                    <li><a href="{% url 'home' %}?func=3&id={{ labactivity.labid }}&notif=3">Unhide</a></li>
                                     {% endif %}
                                     <li><a href="{% url 'home' %}labactivity/?id={{ labactivity.labid }}">View</a></li>
                               </ul>
@@ -165,6 +166,21 @@
     <script src="{% static 'js/bootstrap.js' %}"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script type="text/javascript" src="{% static 'js/pnotify.custom.min.js' %}"></script>
+
+    <script type="text/javascript">
+        {% if ptrue %}
+            $(function(){
+                new PNotify({
+                    title: 'Success!',
+                    text: '{{ ptext }}',
+                    type: 'success',
+                    animate_speed: 'fast'
+                });
+            });
+        {% endif %}
+    </script>
 
     <!-- Include SmartWizard JavaScript source -->
 </body>

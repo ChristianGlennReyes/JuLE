@@ -90,9 +90,10 @@ class GroupGrade(models.Model):
 	grade = models.FloatField()
 	status = models.BooleanField()
 	value = models.CharField(max_length=10000)
+	average = models.FloatField()
 
 	def __str__(self):
-		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.grade) + " - " + str(self.status) + " - " + str(self.value)
+		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.grade) + " - " + str(self.status) + " - " + str(self.value) + " - " + str(self.average)
 
 class DataValue(models.Model):
 	procedureid = models.ForeignKey(LabProcedure, models.DO_NOTHING)
@@ -110,3 +111,10 @@ class LabProcedureStatus(models.Model):
 
 	def __str__(self):
 		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.status)
+
+class Notification(models.Model):
+	profile = models.ForeignKey(Profile, models.DO_NOTHING)
+	title = models.CharField(max_length=200)
+	text = models.CharField(max_length=200)
+	ntype = models.CharField(max_length=50)
+	status = models.BooleanField()
