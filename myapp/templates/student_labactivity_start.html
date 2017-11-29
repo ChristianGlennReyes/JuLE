@@ -151,7 +151,7 @@
                         {% endif %}
                     {% else %}
                         {% if labprocedure.maxvalue %}
-                        <textarea class="form-control" rows="5"></textarea>
+                        <textarea id="container{{ labprocedure.stepnum }}" class="form-control" rows="5"></textarea>
                         {% endif %}
                     {% endif %}
                 </div>
@@ -206,8 +206,8 @@
 
             // Toolbar extra buttons
             var btnFinish = $('<button></button>').text('Finish')
-                                             .addClass('btn btn-info')
-                                             .on('click', function(){ alert('Finish Clicked'); });
+                                             .addClass('btn btn-success');
+                                             /*.on('click', function(){ alert('Finish Clicked'); });*/
             var btnCancel = $('<button></button>').text('Cancel')
                                              .addClass('btn btn-danger')
                                              .on('click', function(){ $('#smartwizard').smartWizard("reset"); });
@@ -229,13 +229,15 @@
             
             $(".sw-btn-prev").on("click", function() {
                 ctr--;
-                console.log(ctr)
+                console.log(ctr);
             });
-            
+
             $(".sw-btn-next").on("click", function() {
                 ctr =  {{ initiallabprocedure }} + step;
                 console.log(ctr);
-                
+
+                svctr = ctr - 1;
+
                 $.ajax({
                     url: '/changeStepStatus/',
                     type: 'POST',
@@ -251,6 +253,28 @@
                          console.log("success!")
                     }
                 });
+
+                $.ajax({
+                {% for labactivity in labactivities%}
+                      url: "/saveData/?id={{ labactivity.labid }}",
+                {% endfor %}
+                      type: 'POST',
+                      data: {
+                        'sData': document.getElementById("container"+step).value,
+                        'groupid': "{{user.profile.groupid.groupid}}",
+                        'procid': svctr,
+                      },
+                      dataType: "json",
+                      success:  function(data){
+                        console.log("hi!!");
+                      }
+                });
+            });
+
+            $(".btn-success").on("click", function() {
+                console.log('click');
+                var url = "{% url 'home' %}";
+                document.location.href = url;
             });
             
             $("#reset-btn").on("click", function() {

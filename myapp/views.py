@@ -23,6 +23,7 @@ def changeStepStatus(request):
 		grade = GroupGrade.objects.get(groupid = groupid, labid = labid, procedureid = procid)
 		grade.status = True
 		grade.save()
+	return HttpResponse("")
 
 @csrf_exempt
 def saveData(request):

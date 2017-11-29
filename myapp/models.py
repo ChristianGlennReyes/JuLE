@@ -90,7 +90,7 @@ class GroupGrade(models.Model):
 	grade = models.FloatField()
 	status = models.BooleanField()
 	value = models.CharField(max_length=10000)
-	average = models.FloatField()
+	average = models.FloatField(null=True)
 
 	def __str__(self):
 		return str(self.groupid) + " - " + str(self.procedureid) + " - " + str(self.grade) + " - " + str(self.status) + " - " + str(self.value) + " - " + str(self.average)
