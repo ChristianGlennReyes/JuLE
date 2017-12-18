@@ -124,11 +124,12 @@
                     </h4>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-striped" id="datatable{{ studentgroup.groupid }}">
+                    <table class="table" id="datatable{{ studentgroup.groupid }}">
                         <thead>
                             <tr>
                                 <th>Lab Activity</th>
                                 <th>Score</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -165,6 +166,10 @@
                                 {% endif %}
                             {% endfor %}
                             <td><script> document.write(grade) </script> / {{ labactivity.maximumpoint }}</td>
+                            <script> 
+                                var percent = parseFloat(grade / {{ labactivity.maximumpoint }} * 100).toFixed(2);
+                            </script>
+                            <td><script> document.write(percent) </script>%</td>
                         </tr>
                     {% endfor %}
                         </tbody>
@@ -208,14 +213,15 @@
 
                 "columns": [
                     null,
-                    { "width": "20%" }
+                    { "width": "10%" },
+                    { "width": "10%" }
                   ]
             });
         });
     </script>
     {% endfor %}
 
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         $(function(){
             new PNotify({
                 title: 'Success!',
@@ -224,7 +230,7 @@
                 animate_speed: 'fast'
             });
         });
-    </script>
+    </script> -->
 
     <!-- Include SmartWizard JavaScript source -->
 </body>

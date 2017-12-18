@@ -12,7 +12,7 @@ from threading import Thread
 
 ardData = "0"
 JSONer = {}
-
+progressObject = []
 @csrf_exempt
 def changeStepStatus(request):
 	if request.method=="POST":
@@ -112,7 +112,7 @@ def home(request):
 			# return render(request, "teacher.html", {})
 			# template = loader.get_template('teacher.html')
 			ptrue = request.GET.get('notif')
-			print(ptrue)
+			# print(ptrue)
 			if ptrue == '0':
 				for selected in lab:
 					ptext = "Selected " + str(selected.labname) + " Lab Activity"
